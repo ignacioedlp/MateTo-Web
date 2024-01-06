@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import Navbar from '../components/Navbar'
-import { Carousel } from "keep-react";
 import axiosInstance from '../utils/apiServices';
 import MatetoSvg from '../assets/mateto.svg'
-import { Skeleton } from "keep-react";
+import { Skeleton, Carousel } from "keep-react";
 
 
 
@@ -37,20 +36,33 @@ const Home = props => {
   const CardCarousel = ({ item }) => {
     //Los textos deben estar sobre la imagen
     return (
-      <div className="flex flex-col items-center justify-center w-full h-96 bg-cover bg-center bg-no-repeat rounded-none" style={{ backgroundImage: `url(${item.imageUrls[0]})` }}>
-        <div className="flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-50 rounded-none">
-          <h1 className="text-3xl font-bold text-white">{item.title}</h1>
-          <p className="text-white">{item.description}</p>
-          <button className="px-4 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600">Ver más</button>
+      <div className="flex flex-col items-center justify-center w-full h-full bg-center bg-no-repeat bg-cover" style={{ backgroundImage: `url(${item.imageUrls[0]})` }}>
+        <div className="flex flex-col items-start justify-center w-full h-full px-20 bg-black bg-opacity-50 ">
+          <h1 className=" text-white text-[78px] font-thin  leading-[93.62px] tracking-tight">{item.title}</h1>
+          <div className="w-[250px] h-[45px] px-[50px] py-4 bg-white rounded-lg justify-center items-center gap-3 inline-flex">
+            <div className="text-xl font-bold text-center text-neutral-700 font-Inter">Compra ahora</div>
+          </div>
         </div>
       </div>
     )
   }
 
-  const CardPromotion = ({ item }) => {
+  const CardPromotion = ({ item, title }) => {
     //Los textos deben estar sobre la imagen
     return (
-      <div className="flex flex-col items-center justify-center w-full h-96 bg-cover bg-center bg-no-repeat rounded-2xl" style={{ backgroundImage: `url(${item.imageUrls[0]})` }}>
+      <div className="flex flex-col items-center justify-center w-full bg-center bg-no-repeat bg-cover h-96 rounded-2xl" style={{ backgroundImage: `url(${item.imageUrls[0]})` }}>
+        <div className="flex flex-col items-start justify-between w-full h-full px-10 py-20 bg-black bg-opacity-50 rounded-3xl">
+          <h4 className='font-bold text-white'>{title}</h4>
+          <h4 className='font-thin text-white underline'>Explorar productos</h4>
+        </div>
+      </div>
+    )
+  }
+
+  const CardNew = ({ item }) => {
+    //Los textos deben estar sobre la imagen
+    return (
+      <div className="flex flex-col items-center justify-center bg-center bg-no-repeat bg-cover h-72 w-72 rounded-xl" style={{ backgroundImage: `url(${item.imageUrls[0]})` }}>
         <div className="flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-50 rounded-3xl">
           <h1 className="text-3xl font-bold text-white">{item.title}</h1>
           <p className="text-white">{item.description}</p>
@@ -63,39 +75,44 @@ const Home = props => {
 
 
   return (
-    <div className='px-5 md:px-0'>
+    <div className='px-5 mx-auto md:px-0'>
       <Navbar />
-      <div className='w-full mb-16'>
+      <div className='container mx-auto my-16'>
         {products.length > 0 ? (
-          <Carousel slideInterval={5000} showControls={true} indicators={true}>
-            {
-              products.map((product, index) => (
-                <CardCarousel item={product} />
-              ))
-            }
+          <Carousel slide={true} indicatorsType="ring" indicators={true}>
+            <CardCarousel item={products[0]} />
+            <CardCarousel item={products[0]} />
           </Carousel>
         ) : (
           <SkeletonComponent />
         )}
       </div>
 
-      <div className='flex mx-auto my-16 container gap-5 flex-col md:flex-row'>
-        {products.length > 0 ? <CardPromotion item={products[0]} /> : <SkeletonComponent />}
-        {products.length > 0 ? <CardPromotion item={products[0]} /> : <SkeletonComponent />}
+      <div className='container flex flex-col gap-5 mx-auto my-16 md:flex-row'>
+        {products.length > 0 ? <CardPromotion item={products[0]} title={"Costos accesibles"} /> : <SkeletonComponent />}
+        {products.length > 0 ? <CardPromotion item={products[0]} title={"Exclusivos"} /> : <SkeletonComponent />}
       </div>
-     <div className='flex mx-auto my-16 container gap-5 flex-col '>
-        <h4 className='text-xl md:text-3xl font-extralight'>Nuevos</h4>
-        <div className='flex mx-auto my-16 container gap-5 flex-col md:flex-row'>
-          {products.length > 0 ? <CardPromotion item={products[0]} /> : <SkeletonComponent />}
-          {products.length > 0 ? <CardPromotion item={products[0]} /> : <SkeletonComponent />}
-          {products.length > 0 ? <CardPromotion item={products[0]} /> : <SkeletonComponent />}
-          {products.length > 0 ? <CardPromotion item={products[0]} /> : <SkeletonComponent />}
+
+      <div className='container flex flex-col gap-5 mx-auto my-16 '>
+        <div className="w-[420px] h-8 justify-start items-start gap-5 inline-flex">
+          <div className="w-1.5 h-[30px] bg-stone-800 rounded-[10px]" />
+          <h4 className='text-xl md:text-3xl font-extralight'>Nuevos</h4>
         </div>
-      </div> 
 
-      <section className="flex mx-auto my-16 container gap-5 flex-col ">
+        <div className='container flex flex-col justify-between gap-5 mx-auto my-16 md:flex-row'>
+          {products.length > 0 ? <CardNew item={products[0]} /> : <SkeletonComponent />}
+          {products.length > 0 ? <CardNew item={products[0]} /> : <SkeletonComponent />}
+          {products.length > 0 ? <CardNew item={products[0]} /> : <SkeletonComponent />}
+          {products.length > 0 ? <CardNew item={products[0]} /> : <SkeletonComponent />}
+        </div>
+      </div>
 
-        <h2 className="text-2xl font-semibold text-center capitalize lg:text-3xl ">Nuestros vendedores</h2>
+      <section className="container flex flex-col gap-5 mx-auto my-16 ">
+        <div className="w-[420px] h-8 justify-start items-start gap-5 inline-flex">
+          <div className="w-1.5 h-[30px] bg-stone-800 rounded-[10px]" />
+          <h4 className='text-xl md:text-3xl font-extralight'>Nuestros vendedores</h4>
+        </div>
+
 
         <div className="grid gap-8 mt-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <div className="w-full max-w-xs text-center">
@@ -152,9 +169,9 @@ const Home = props => {
               <p className="font-semibold ">Enlace rapido</p>
 
               <div className="flex flex-col items-start mt-5 space-y-2">
-                <a href="/home" className=" transition-colors duration-300 hover:underline ">Home</a>
-                <a href="/products" className="0 transition-colors duration-300 hover:underline ">Nuestros productos</a>
-                <a href="/vendedores" className=" transition-colors duration-300  hover:underline ">Nuestros vendedores</a>
+                <a href="/home" className="transition-colors duration-300 hover:underline">Home</a>
+                <a href="/products" className="transition-colors duration-300 0 hover:underline ">Nuestros productos</a>
+                <a href="/vendedores" className="transition-colors duration-300 hover:underline">Nuestros vendedores</a>
               </div>
             </div>
 
@@ -162,14 +179,14 @@ const Home = props => {
               <p className="font-semibold ">Nosotros</p>
 
               <div className="flex flex-col items-start mt-5 space-y-2">
-                <a href="#" className=" transition-colors duration-300 hover:underline ">Terminos y condiciones</a>
-                <a href="#" className=" transition-colors duration-300 hover:underline ">Preguntas y respuestas</a>
-                <a href="#" className=" transition-colors duration-300 hover:underline ">Contactanos</a>
+                <a href="#" className="transition-colors duration-300 hover:underline">Terminos y condiciones</a>
+                <a href="#" className="transition-colors duration-300 hover:underline">Preguntas y respuestas</a>
+                <a href="#" className="transition-colors duration-300 hover:underline">Contactanos</a>
               </div>
             </div>
           </div>
 
-          <hr className="my-6  md:my-8 " />
+          <hr className="my-6 md:my-8 " />
 
           <div className="flex items-center justify-between">
             <a href="#">

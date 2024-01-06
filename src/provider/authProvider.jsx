@@ -7,7 +7,7 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   // State to hold the authentication token
   const [token, setToken_] = useState(localStorage.getItem("token"));
-  const [user, setUser_] = useState(JSON.parse(localStorage.getItem("user")));
+  const [user, setUser_] = useState(localStorage.getItem("user"));
 
   // Chequeo que si tengo un token, verifique si es valido
   useEffect(() => {
@@ -52,7 +52,7 @@ const AuthProvider = ({ children }) => {
     () => ({
       token,
       setToken,
-      user,
+      user: JSON.stringify(user),
       setUser
     }),
     [token]
