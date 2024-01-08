@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 
-const RangeSlider = () => {
-  const [range, setRange] = useState({ min: 0, max: 20000 });
+const RangeSlider = ({ handleChange, range }) => {
 
   const handleRangeChange = (event) => {
-    setRange({
+    handleChange({
       ...range,
       [event.target.name]: parseInt(event.target.value)
-    });
+    })
   };
 
   return (
@@ -21,7 +20,7 @@ const RangeSlider = () => {
           type="number"
           name="min"
           id="min"
-          value={range.min}
+          value={range.priceMin}
           onChange={handleRangeChange}
           className="w-1/2 px-2 py-1 text-sm text-gray-700 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
         />
@@ -29,7 +28,7 @@ const RangeSlider = () => {
           type="number"
           name="max"
           id="max"
-          value={range.max}
+          value={range.priceMax}
           onChange={handleRangeChange}
           className="w-1/2 px-2 py-1 text-sm text-gray-700 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
         />

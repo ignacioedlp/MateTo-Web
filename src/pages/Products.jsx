@@ -6,42 +6,25 @@ import { Skeleton } from "keep-react";
 import { FcLike } from "react-icons/fc";
 import { LuSettings2 } from "react-icons/lu";
 import { IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
-
-const colors = [
-  { name: 'Purple', value: 'bg-purple-400' }, // Tailwind CSS class
-  { name: 'Black', value: 'bg-gray-700' }, // Más oscuro que el típico, pero más claro que el negro
-  { name: 'White', value: 'bg-white' },
-  { name: 'Yellow', value: 'bg-yellow-400' },
-  { name: 'Red', value: 'bg-red-400' },
-  { name: 'Blue', value: 'bg-blue-400' },
-  { name: 'Green', value: 'bg-green-400' },
-  { name: 'Gray', value: 'bg-gray-400' },
-  { name: 'Pink', value: 'bg-pink-400' },
-  { name: 'Brown', value: 'bg-amber-400' }, // No hay un marrón en Tailwind, pero ámbar claro podría funcionar
-  { name: 'Orange', value: 'bg-orange-400' },
-  { name: 'Indigo', value: 'bg-indigo-400' },
-];
-
-const sizes = [
-  { name: 'S', value: 's' },
-  { name: 'M', value: 'm' },
-  { name: 'L', value: 'l' },
-  { name: 'XL', value: 'xl' },
-  { name: 'XXL', value: 'xxl' },
-];
-
-
-
+import { useSettings } from '../provider/settingsProvider';
+import { useFavorites } from '../provider/favoriteProvider';
+import { useAxios } from 'use-axios-client'
+import { useAuth } from '../provider/authProvider';
+import { useNavigate } from "react-router-dom";
 
 
 const SkeletonComponent = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-[282px] h-[441px] ">
-      <Skeleton animation={true}>
-        <div className="w-full">
-          <Skeleton.Line height="h-[350px]" />
+    <div className="grid w-full grid-cols-3 gap-4 mx-auto">
+      {[1, 2, 3, 4, 5, 6, 7].map(() => (
+        <div className="flex flex-col items-center justify-center w-[282px] h-[441px] ">
+          <Skeleton animation={true}>
+            <div className="w-full">
+              <Skeleton.Line height="h-[350px]" />
+            </div>
+          </Skeleton>
         </div>
-      </Skeleton>
+      ))}
     </div>
   );
 }
@@ -49,9 +32,23 @@ const SkeletonComponent = () => {
 
 const Products = () => {
   const [products, setProducts] = useState([])
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
-  const [typeProducts, setTypeProducts] = useState("news");
+  const [productType, setProductType] = useState(null);
+  const [range, setRange] = useState({
+    priceMin: 0,
+    priceMax: 100000,
+  });
+  const [productCategory, setProductCategory] = useState(null);
+
+  const [section, setSection] = useState("news");
+
+  const { settings } = useSettings();
+  const { addFavorite } = useFavorites();
+  const { token } = useAuth();
+  const navigate = useNavigate();
+
 
   const handleAddColor = color => {
     if (selectedColors.find((selectedColor) => selectedColor === color)) {
@@ -69,138 +66,205 @@ const Products = () => {
     }
   }
 
-  const fetchData = async () => {
-    const response = await axiosInstance.get('/products')
+  const handleRangeChange = (event) => {
+    setRange({
+      ...range,
+      [event.target.name]: parseInt(event.target.value)
+    })
+  };
+
+  const fetchData = async (sections) => {
+    const response = await axiosInstance.get('/products', {
+      params: {
+        type: productType,
+        category: productCategory,
+        priceMin: range.priceMin,
+        priceMax: range.priceMax,
+        sizes: selectedSizes,
+        colors: selectedColors,
+        recent: sections === "news" ? true : null,
+        popular: sections === "recomended" ? true : null,
+      },
+    })
     setProducts(response.data)
+    setIsLoading(false)
   }
 
-  const refreshItem = async (item) => {
-    setTimeout(() => {
-      console.log(`refreshing ${item}`);
-      setProducts([]);
-      setTypeProducts(item);
-      fetchData();
-    }, 1000);
+  const refreshItem = async (section) => {
+    setSection(section);
+    setIsLoading(true);
+    setProducts([]);
+    fetchData(section);
   }
 
   useEffect(() => {
-    fetchData()
+    setProducts([])
+    setIsLoading(true)
+    fetchData("news")
   }, []);
+
+  useEffect(() => {
+    fetchData()
+  }, [productType, productCategory, range, selectedColors, selectedSizes]);
 
   return (
     <div>
       <Navbar />
 
-      <section className='container flex items-start w-full gap-10 mx-auto'>
+      <section className='container flex items-start w-full gap-10 mx-auto mb-4'>
         <div className='bg-white border-t-2 border-x-2 border-stone-300 w-72 h-max mt-[50px]'>
           <div className='flex items-center justify-between px-6 py-5 border-b-2 border-stone-300'>
-            <p className="text-zinc-500 text-[22px] font-semibold font-Inter tracking-wide">Filter</p>
+            <p className="text-zinc-500 text-[22px] font-semibold font-inter tracking-wide">Filtros</p>
             <LuSettings2 className='text-[22px] text-zinc-500' />
           </div>
           <div className='flex flex-col items-center justify-between gap-4 px-6 py-5 border-b-2 border-stone-300'>
             {
-              [1, 2, 3, 4].map(() => (
-                <div className='flex items-center justify-between w-full cursor-pointer'>
-                  <p className="text-base font-semibold tracking-wide text-zinc-500 font-Inter">Categoria</p>
+              settings.productCategories?.map((s) => (
+                <div className='flex items-center justify-between w-full cursor-pointer' onClick={() => setProductCategory(s.id)}>
+                  <p className="text-base font-semibold tracking-wide capitalize text-zinc-500 font-inter">{s.name}</p>
                   <IoIosArrowForward className='text-base text-zinc-500' />
                 </div>
               ))
             }
           </div>
           <div className='flex items-center justify-between px-6 py-5 border-b-2 border-stone-300'>
-            <p className="text-zinc-500 text-[22px] font-semibold font-Inter tracking-wide">Price</p>
+            <p className="text-zinc-500 text-[22px] font-semibold font-inter tracking-wide">Tipo</p>
+            <IoIosArrowDown className='text-[22px] text-zinc-500' />
+          </div>
+          <div className='flex flex-col items-center justify-between gap-4 px-6 py-5 border-b-2 border-stone-300'>
+            {
+              settings.productTypes?.map((s) => (
+                <div className='flex items-center justify-between w-full cursor-pointer' onClick={() => setProductType(s.id)}>
+                  <p className="text-base font-semibold tracking-wide capitalize text-zinc-500 font-inter">{s.name}</p>
+                  <IoIosArrowForward className='text-base text-zinc-500' />
+                </div>
+              ))
+            }
+          </div>
+          <div className='flex items-center justify-between px-6 py-5 border-b-2 border-stone-300'>
+            <p className="text-zinc-500 text-[22px] font-semibold font-inter tracking-wide">Precio</p>
             <IoIosArrowDown className='text-[22px] text-zinc-500' />
           </div>
           <div className='flex flex-col items-center justify-between w-full gap-4 px-6 py-5 border-b-2 border-stone-300'>
             <div className="flex items-center justify-between w-full">
-              <RangeSlider />
+              <div className="w-full ">
+                <div className="flex justify-between">
+                  <label htmlFor="min" className="text-sm font-medium text-gray-700">Min</label>
+                  <label htmlFor="max" className="text-sm font-medium text-gray-700">Max</label>
+                </div>
+                <div className="flex justify-between gap-4 mt-1">
+                  <input
+                    type="number"
+                    name="priceMin"
+                    id="priceMin"
+                    value={range.priceMin}
+                    onChange={handleRangeChange}
+                    className="w-1/2 px-2 py-1 text-sm text-gray-700 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  />
+                  <input
+                    type="number"
+                    name="priceMax"
+                    id="priceMax"
+                    value={range.priceMax}
+                    onChange={handleRangeChange}
+                    className="w-1/2 px-2 py-1 text-sm text-gray-700 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div className='flex items-center justify-between px-6 py-5 border-b-2 border-stone-300'>
-            <p className="text-zinc-500 text-[22px] font-semibold font-Inter tracking-wide">Color</p>
+            <p className="text-zinc-500 text-[22px] font-semibold font-inter tracking-wide">Color</p>
             <IoIosArrowDown className='text-[22px] text-zinc-500' />
           </div>
           <div className='flex flex-col items-center justify-between w-full gap-4 px-6 py-5 border-b-2 border-stone-300'>
             <div className='grid grid-cols-4 gap-4'>
               {
-                colors.map((color) => (
+                settings.colors?.map((color) => (
                   <div className='flex flex-col items-center justify-center '>
                     <div
-                      className={`flex items-center justify-center w-9 h-9 rounded-[12px] cursor-pointer ${color.value}
-                          ${selectedColors.includes(color.value) ? `border-2 p-1` : ''}`}
-                      onClick={() => handleAddColor(color.value)}
+                      className={`flex items-center justify-center w-9 h-9 rounded-[12px] cursor-pointer
+                          ${selectedColors.includes(color.id) ? `border-2 p-1` : ''}`}
+                      style={{ backgroundColor: color.hex }}
+                      onClick={() => handleAddColor(color.id)}
                     >
-                      {selectedColors.includes(color.value) && (
+                      {selectedColors.includes(color.id) && (
                         <div className={`w-3 h-3 bg-stone-300 rounded-full`}></div>
                       )}
                     </div>
-                    <p className='text-[14px] font-semibold text-center text-[#8A8989] font-Inter'>{color.name}</p>
+                    <p className='text-[14px] font-semibold text-center text-[#8A8989] font-inter capitalize'>{color.name}</p>
                   </div>
                 ))
               }
             </div>
           </div>
           <div className='flex items-center justify-between px-6 py-5 border-b-2 border-stone-300'>
-            <p className="text-zinc-500 text-[22px] font-semibold font-Inter tracking-wide">Sizes</p>
+            <p className="text-zinc-500 text-[22px] font-semibold font-inter tracking-wide">Tamaños</p>
             <IoIosArrowDown className='text-[22px] text-zinc-500' />
           </div>
           <div className='flex flex-col items-center justify-between w-full gap-4 px-6 py-5 border-b-2 border-stone-300'>
             <div className='grid grid-cols-3 gap-4'>
               {
-                sizes.map((size) => (
+                settings.sizes?.map((size) => (
                   <div
                     className={`flex items-center justify-center w-[61px] h-8 rounded-lg opacity-80 cursor-pointer0" 
 
-                          ${selectedSizes.includes(size.value) ? `border-2 border-stone-700` : 'border border-[#8A8989]'}`}
-                    onClick={() => handleAddSize(size.value)}
+                          ${selectedSizes.includes(size.id) ? `border-2 border-stone-700` : 'border border-[#8A8989]'}`}
+                    onClick={() => handleAddSize(size.id)}
                   >
-                    <p className={`text-[14px] font-semibold text-center text-[#8A8989] font-Inter ${selectedSizes.includes(size.value) ? ` text-stone-700` : ''}`}>{size.name}</p>
+                    <p className={`text-[14px] font-semibold text-center text-[#8A8989] font-inter ${selectedSizes.includes(size.id) ? ` text-stone-700` : ''}`}>{size.name}</p>
                   </div>
                 ))
               }
             </div>
           </div>
         </div>
-        <div class="flex-col">
+        <div class="flex-col w-full">
 
-          <div className="relative h-6 w-96 my-[50px]">
-            <div className={`absolute top-0 left-0 text-xl font-semibold  font-Inter `}>Nuestros equipos</div>
-            <button className={`left-[631px] top-0 absolute ${typeProducts === 'news' ? "text-stone-800" : "text-zinc-400"} text-xl font-semibold font-Inter cursor-pointer`} onClick={() => refreshItem("news")}>Nuevos</button>
-            <button className={`left-[728px] top-0 absolute ${typeProducts === 'recomended' ? "text-stone-800" : "text-zinc-400"} text-xl font-semibold font-Inter cursor-pointer`} onClick={() => refreshItem("recomended")}>Recomendados</button>
+          <div className="flex justify-between h-6 w-full my-[50px]">
+            <div className={`text-xl font-semibold  font-inter `}>Nuestros equipos</div>
+            <div className='flex gap-4'>
+              <button className={`${section === 'news' ? "text-stone-800" : "text-zinc-400"} text-xl font-semibold font-inter cursor-pointer`} onClick={() => refreshItem("news")}>Nuevos</button>
+              <button className={` ${section === 'recomended' ? "text-stone-800" : "text-zinc-400"} text-xl font-semibold font-inter cursor-pointer`} onClick={() => refreshItem("recomended")}>Recomendados</button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-8">
-            {
-              [1, 2, 3, 4, 5, 6, 7].map(() => (
-                products.length > 0 ?
-                  <div className=" w-[282px] h-[441px] ">
-                    <div className="relative">
-                      <img src={products[0].imageUrls[0]} alt="Producto 1" className="object-cover w-[282px] h-[370px] rounded-lg" />
 
-                      <div className="absolute top-0 right-0 mt-4 mr-4">
-                        <div className="w-[32.36px] h-[32.36px] bg-white rounded-full flex items-center justify-center">
-                          <FcLike size={20} />
+          {isLoading ?
+            (<SkeletonComponent />) : (
+
+              products?.length > 0 ?
+                <div className="grid w-full grid-cols-3 gap-4 mx-auto">
+                  {products?.map((p) => (
+                    <div className=" w-[282px] h-[441px] " onClick={() => navigate(`/products/${p.id}`)} >
+                      <div className="relative">
+                        <img src={p.imageUrls[0]} alt="Producto 1" className="object-cover w-[282px] h-[370px] rounded-lg" />
+
+                        <div className="absolute top-0 right-0 mt-4 mr-4">
+                          <div className="w-[32.36px] h-[32.36px] bg-white rounded-full flex items-center justify-center" onClick={() => addFavorite(p.id)}>
+                            <FcLike size={15} />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className='flex justify-between mt-3'>
+                        <div className='flex flex-col gap-2'>
+                          <h3 className="text-base font-semibold ">{p.title}</h3>
+                          <p className="text-sm font-medium ">{p.author.name}</p>
+                        </div>
+                        <div className="w-[82.31px] h-[36.58px] bg-neutral-100 rounded-lg flex items-center justify-center" >
+                          <div className="text-sm font-bold text-center text-neutral-700 font-inter">$ {p.price}</div>
                         </div>
                       </div>
                     </div>
-
-                    <div className='flex justify-between mt-3'>
-                      <div className='flex flex-col gap-2'>
-                        <h3 className="text-base font-semibold ">{products[0].title}</h3>
-                        <p className="text-sm font-medium ">{products[0].author.name}</p>
-                      </div>
-                      <div className="w-[82.31px] h-[36.58px] bg-neutral-100 rounded-lg flex items-center justify-center" >
-                        <div className="text-sm font-bold text-center text-neutral-700 font-Inter">$ {products[0].price}</div>
-                      </div>
-                    </div>
+                  ))
+                  }</div> : (
+                  <div className="flex items-center justify-center w-full ">
+                    <p className="text-2xl font-semibold text-center text-neutral-700 font-inter">No hay productos</p>
                   </div>
-                  : <SkeletonComponent />
-              ))
-            }
-          </div>
+                ))}
         </div>
       </section >
-
     </div >
   )
 }

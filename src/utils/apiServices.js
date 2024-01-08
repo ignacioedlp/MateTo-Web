@@ -6,5 +6,6 @@ const axiosInstance = axios.create({
 });
 
 // Puedes agregar interceptores o configuraciones adicionales aquí
+//Si obtengo un 401 (no autorizado) del servidor, cierro la sesión del usuario
 
 export default axiosInstance;

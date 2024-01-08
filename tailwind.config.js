@@ -9,5 +9,6 @@ export default {
   ],
 
   presets: [keepPreset],
+  darkMode: ['class', '[data-mode="dark"]'],
 }
 

@@ -22,6 +22,7 @@ import Profile from "../pages/Profile";
 import Products from "../pages/Products";
 import Cart from "../pages/Cart";
 import Favorite from "../pages/Favorite";
+import Product from "../pages/Product";
 
 
 const Routes = () => {
@@ -42,6 +43,11 @@ const Routes = () => {
         {
           path: "/products",
           element: <Products />,
+        },
+        {
+          // View single product, el id del producto se pasa como parametro
+          path: "/products/:id",
+          element: <Product />,
         },
         {
           path: "/cart",
