@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import Navbar from '../components/Navbar'
-import axiosInstance from '../utils/apiServices';
+import api from '../utils/apiServices';
 import MatetoSvg from '../assets/mateto.svg'
 import { Skeleton, Carousel } from "keep-react";
+import { useAuth } from '../provider/authProvider';
 
 
 
@@ -11,12 +12,17 @@ const Home = props => {
 
   const [products, setProducts] = useState([])
   const [vendors, setVendors] = useState([])
+  const { token } = useAuth();
 
   const fetchData = async () => {
-    const productsData = await axiosInstance.get('/products');
+    const productsData = await api.products.getProducts({
+      userAuthToken: token,
+    }).request
     setProducts(productsData.data)
 
-    const vendorsData = await axiosInstance.get('/vendors');
+    const vendorsData = await api.vendors.getVendors({
+      userAuthToken: token,
+    }).request
     setVendors(vendorsData.data)
 
   }
@@ -82,7 +88,7 @@ const Home = props => {
     <div className='px-5 mx-auto md:px-0'>
       <Navbar />
       <div className='container mx-auto my-16'>
-        {products.length > 0 ? (
+        {products?.length > 0 ? (
           <Carousel slide={true} indicatorsType="ring" indicators={true}>
             {products.slice(0, 4).map((item, index) => {
               return (
@@ -97,14 +103,14 @@ const Home = props => {
 
       <div className='container flex flex-col gap-5 mx-auto my-16 md:flex-row'>
         {
-          products.length > 0 ? <CardPromotion item={
+          products?.length > 0 ? <CardPromotion item={
             products.reduce((prev, current) => {
               return (prev.price > current.price) ? prev : current
             })
           } title={"Exclusivos"} /> : <SkeletonComponent />
         }
         {
-          products.length > 0 ? <CardPromotion item={
+          products?.length > 0 ? <CardPromotion item={
             products.reduce((prev, current) => {
               return (prev.price < current.price) ? prev : current
             })
@@ -119,7 +125,7 @@ const Home = props => {
         </div>
 
         <div className='container flex flex-col justify-between gap-5 mx-auto my-16 md:flex-row'>
-          {products.length > 0 ?
+          {products?.length > 0 ?
             products.slice(0, 4).map((item, index) => {
               return (
                 <CardNew key={index} item={item} />

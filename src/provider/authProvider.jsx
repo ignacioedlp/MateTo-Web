@@ -1,61 +1,78 @@
-import axiosInstance from '../utils/apiServices';
-import { verifyToken } from "../utils/jwt";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { verifyToken, decodeToken } from "../utils/jwt";
+import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  // State to hold the authentication token
-  const [token, setToken_] = useState(localStorage.getItem("token"));
-  const [user, setUser_] = useState(localStorage.getItem("user"));
+  // State to hold the authentication token and user
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [user, setUser] = useState(() => {
+    const user = localStorage.getItem("user");
+    return user ? JSON.parse(user) : null;
+  });
+  const [role, setRole] = useState(() => {
+    const t = localStorage.getItem("token");
+    return t ? decodeToken(t).role : null;
+  });
 
-  // Chequeo que si tengo un token, verifique si es valido
+
+  // Check if token is valid
   useEffect(() => {
     const verify = async () => {
       if (token) {
-        const response = await verifyToken(token);
-        if (!response) {
-          delete axiosInstance.defaults.headers.common["Authorization"];
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
-          setToken(null);
-          setUser(null);
+        try {
+          const response = await verifyToken(token);
+          // Adjust this condition based on how verifyToken indicates an invalid token
+          if (!response) {
+            clearAuth();
+          }
+        } catch (error) {
+          console.error("Error verifying token:", error);
+          clearAuth();
         }
       }
-    }
+    };
     verify();
-  }, []);
+  }, [token]);  // Include token as a dependency
 
-  // Function to set the authentication token
-  const setToken = (newToken) => {
-    setToken_(newToken);
+  // Function to clear authentication
+  const clearAuth = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setToken(null);
+    setUser(null);
+    setRole(null);
   };
 
-  const setUser = (newUser) => {
-    setUser_(newUser);
-  }
+  // Function to set the authentication token
+  const setTokenAndUser = (newToken, newUser) => {
+    setToken(newToken);
+    setUser(newUser);
+    setRole(decodeToken(newToken).role);
+  };
 
+  // Update axios headers and localStorage when token or user changes
   useEffect(() => {
     if (token) {
-      axiosInstance.defaults.headers.common["Authorization"] = "Bearer " + token;
       localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user));
+      }
     } else {
-      delete axiosInstance.defaults.headers.common["Authorization"];
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
+      clearAuth();
     }
-  }, [token]);
+  }, [token, user]); // Include user as a dependency
 
   // Memoized value of the authentication context
   const contextValue = useMemo(
     () => ({
       token,
-      setToken,
-      user: JSON.stringify(user),
-      setUser
+      setToken: setTokenAndUser,
+      user,
+      setUser,
+      role
     }),
-    [token]
+    [token, user]
   );
 
   // Provide the authentication context to the children components
@@ -64,7 +81,6 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   return useContext(AuthContext);
 };

@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import RangeSlider from '../components/SliderRange'
-import axiosInstance from '../utils/apiServices';
+import api from '../utils/apiServices';
 import { Skeleton } from "keep-react";
 import { FcLike } from "react-icons/fc";
 import { LuSettings2 } from "react-icons/lu";
 import { IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
 import { useSettings } from '../provider/settingsProvider';
-import { useFavorites } from '../provider/favoriteProvider';
-import { useAxios } from 'use-axios-client'
+import axios from 'axios'
 import { useAuth } from '../provider/authProvider';
 import { useNavigate } from "react-router-dom";
+
 
 
 const SkeletonComponent = () => {
   return (
     <div className="grid w-full grid-cols-3 gap-4 mx-auto">
-      {[1, 2, 3, 4, 5, 6, 7].map(() => (
-        <div className="flex flex-col items-center justify-center w-[282px] h-[441px] ">
+      {[1, 2, 3, 4, 5, 6, 7].map((i, index) => (
+        <div className="flex flex-col items-center justify-center w-[282px] h-[441px] " key={index} >
           <Skeleton animation={true}>
             <div className="w-full">
               <Skeleton.Line height="h-[350px]" />
@@ -35,17 +35,16 @@ const Products = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
-  const [productType, setProductType] = useState(null);
+  const [selectedProductType, setSelectedProductType] = useState(null);
   const [range, setRange] = useState({
     priceMin: 0,
     priceMax: 100000,
   });
-  const [productCategory, setProductCategory] = useState(null);
+  const [selectedProductCategory, setSelectedProductCategory] = useState(null);
 
   const [section, setSection] = useState("news");
 
   const { settings } = useSettings();
-  const { addFavorite } = useFavorites();
   const { token } = useAuth();
   const navigate = useNavigate();
 
@@ -73,20 +72,32 @@ const Products = () => {
     })
   };
 
-  const fetchData = async (sections) => {
-    const response = await axiosInstance.get('/products', {
+  const fetchProducts = async (sections) => {
+    const response = await api.products.getProducts({
+      userAuthToken: token,
       params: {
-        type: productType,
-        category: productCategory,
+        sections,
+        type: selectedProductType,
+        category: selectedProductCategory,
         priceMin: range.priceMin,
         priceMax: range.priceMax,
-        sizes: selectedSizes,
         colors: selectedColors,
-        recent: sections === "news" ? true : null,
-        popular: sections === "recomended" ? true : null,
-      },
-    })
+        sizes: selectedSizes,
+      }
+    }).request
+
     setProducts(response.data)
+  };
+
+  const addToFavorites = async (id) => {
+    await api.user.favorites.addToFavorites({
+      userAuthToken: token,
+      productId: id,
+    }).request
+  }
+
+  const fetchData = async (sections) => {
+    await fetchProducts(sections)
     setIsLoading(false)
   }
 
@@ -105,7 +116,7 @@ const Products = () => {
 
   useEffect(() => {
     fetchData()
-  }, [productType, productCategory, range, selectedColors, selectedSizes]);
+  }, [selectedProductType, selectedProductCategory, range, selectedColors, selectedSizes]);
 
   return (
     <div>
@@ -120,7 +131,7 @@ const Products = () => {
           <div className='flex flex-col items-center justify-between gap-4 px-6 py-5 border-b-2 border-stone-300'>
             {
               settings.productCategories?.map((s) => (
-                <div className='flex items-center justify-between w-full cursor-pointer' onClick={() => setProductCategory(s.id)}>
+                <div className='flex items-center justify-between w-full cursor-pointer' onClick={() => setSelectedProductCategory(s.id)} key={s.id}>
                   <p className="text-base font-semibold tracking-wide capitalize text-zinc-500 font-inter">{s.name}</p>
                   <IoIosArrowForward className='text-base text-zinc-500' />
                 </div>
@@ -134,7 +145,7 @@ const Products = () => {
           <div className='flex flex-col items-center justify-between gap-4 px-6 py-5 border-b-2 border-stone-300'>
             {
               settings.productTypes?.map((s) => (
-                <div className='flex items-center justify-between w-full cursor-pointer' onClick={() => setProductType(s.id)}>
+                <div className='flex items-center justify-between w-full cursor-pointer' onClick={() => setSelectedProductType(s.id)} key={s.id}>
                   <p className="text-base font-semibold tracking-wide capitalize text-zinc-500 font-inter">{s.name}</p>
                   <IoIosArrowForward className='text-base text-zinc-500' />
                 </div>
@@ -181,7 +192,7 @@ const Products = () => {
             <div className='grid grid-cols-4 gap-4'>
               {
                 settings.colors?.map((color) => (
-                  <div className='flex flex-col items-center justify-center '>
+                  <div className='flex flex-col items-center justify-center ' key={color.id}>
                     <div
                       className={`flex items-center justify-center w-9 h-9 rounded-[12px] cursor-pointer
                           ${selectedColors.includes(color.id) ? `border-2 p-1` : ''}`}
@@ -211,6 +222,7 @@ const Products = () => {
 
                           ${selectedSizes.includes(size.id) ? `border-2 border-stone-700` : 'border border-[#8A8989]'}`}
                     onClick={() => handleAddSize(size.id)}
+                    key={size.id}
                   >
                     <p className={`text-[14px] font-semibold text-center text-[#8A8989] font-inter ${selectedSizes.includes(size.id) ? ` text-stone-700` : ''}`}>{size.name}</p>
                   </div>
@@ -219,7 +231,7 @@ const Products = () => {
             </div>
           </div>
         </div>
-        <div class="flex-col w-full">
+        <div className="flex-col w-full">
 
           <div className="flex justify-between h-6 w-full my-[50px]">
             <div className={`text-xl font-semibold  font-inter `}>Nuestros equipos</div>
@@ -236,19 +248,19 @@ const Products = () => {
               products?.length > 0 ?
                 <div className="grid w-full grid-cols-3 gap-4 mx-auto">
                   {products?.map((p) => (
-                    <div className=" w-[282px] h-[441px] " onClick={() => navigate(`/products/${p.id}`)} >
+                    <div className=" w-[282px] h-[441px] " key={p.id}>
                       <div className="relative">
                         <img src={p.imageUrls[0]} alt="Producto 1" className="object-cover w-[282px] h-[370px] rounded-lg" />
 
                         <div className="absolute top-0 right-0 mt-4 mr-4">
-                          <div className="w-[32.36px] h-[32.36px] bg-white rounded-full flex items-center justify-center" onClick={() => addFavorite(p.id)}>
+                          <div className="w-[32.36px] h-[32.36px] bg-white rounded-full flex items-center justify-center" onClick={() => { addToFavorites(p.id) }}>
                             <FcLike size={15} />
                           </div>
                         </div>
                       </div>
 
                       <div className='flex justify-between mt-3'>
-                        <div className='flex flex-col gap-2'>
+                        <div className='flex flex-col gap-2 ' onClick={() => navigate(`/products/${p.id}`)}>
                           <h3 className="text-base font-semibold ">{p.title}</h3>
                           <p className="text-sm font-medium ">{p.author.name}</p>
                         </div>

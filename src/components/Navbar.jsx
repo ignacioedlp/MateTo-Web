@@ -13,7 +13,7 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
-  const { setToken, token, user, setUser } = useAuth();
+  const { setToken, token, user, setUser, role } = useAuth();
 
 
   const handleLogout = () => {
@@ -59,12 +59,20 @@ function Navbar() {
                   <a href="/products" className="px-2 py-1 font-medium transition-colors duration-200 transform rounded-md text-md">
                     Products
                   </a>
+                  {
+                    role === 'ADMIN' || role === 'VENDOR' ? (
+                      <a href={`/${role === 'ADMIN' ? 'admin' : 'vendor'
+                        }`} className="px-2 py-1 font-medium transition-colors duration-200 transform rounded-md text-md">
+                        Mi panel
+                      </a>
+                    ) : null
+                  }
                 </>
 
               ) : null}
           </div>
 
-          {
+          {/* {
             token ? (
               <div className="relative mt-4 md:mt-0">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -75,7 +83,7 @@ function Navbar() {
 
                 <input type="text" className="w-full py-2 pl-10 pr-4 text-[#807D7E] rounded-lg bg-neutral-100  focus:outline-none focus:ring focus:ring-opacity-40 " placeholder="Search" />
               </div>
-            ) : null}
+            ) : null} */}
 
           <div className="flex items-center mt-4 md:mt-0">
             {

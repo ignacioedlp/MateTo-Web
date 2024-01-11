@@ -8,6 +8,8 @@ import SignUp from "../pages/auth/SignUp";
 
 // Vendor pages
 import VendorDashboard from "../pages/vendor/Dashboard";
+import Purchases from "../pages/vendor/Purchases";
+import VendorProducts from "../pages/vendor/Products";
 
 // Admin pages
 import AdminDashboard from "../pages/admin/Dashboard";
@@ -67,9 +69,18 @@ const Routes = () => {
       element: <ProtectedRoute roles={["VENDOR"]} />,
       children: [
         {
-          path: "/vendor/dashboard",
+          path: "/vendor",
           element: <VendorDashboard />,
         },
+        {
+          path: "/vendor/products",
+          element: <VendorProducts />,
+        },
+        {
+          path: "/vendor/purchases/",
+          element: <Purchases />
+        },
+
       ],
     },
   ];
@@ -80,7 +91,7 @@ const Routes = () => {
       element: <ProtectedRoute roles={["ADMIN"]} />,
       children: [
         {
-          path: "/admin/dashboard",
+          path: "/admin",
           element: <AdminDashboard />,
         },
         {

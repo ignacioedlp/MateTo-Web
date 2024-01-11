@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import axiosInstance from '../utils/apiServices';
+import api from '../utils/apiServices';
 
 // Crear el contexto
 export const SettingsContext = createContext();
@@ -12,7 +12,7 @@ const SettingsProvider = ({ children }) => {
     // Función para obtener los ajustes
     const fetchSettings = async () => {
       try {
-        const response = await axiosInstance.get('/settings');
+        const response = await api.settings.getSettings().request;
         setSettings(response.data);
       } catch (error) {
         console.error('Error al obtener los ajustes:', error);

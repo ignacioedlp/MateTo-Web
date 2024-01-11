@@ -5,16 +5,16 @@ import { useNavigate } from "react-router-dom";
 
 
 
-function Dashboard() {
+function Purchases() {
 
   const navigate = useNavigate();
 
   return (
     <div className='flex flex-col  '>
       <Navbar />
-      <SideBar page={"home"}/>
+      <SideBar page={"purchases"}/>
     </div>
   )
 }
 
-export default Dashboard
+export default Purchases

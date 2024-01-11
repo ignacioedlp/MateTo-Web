@@ -1,14 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import Navbar from '../components/Navbar'
-import { useFavorites } from '../provider/favoriteProvider'
-import axiosInstance from '../utils/apiServices'
+import { useAuth } from '../provider/authProvider'
+import api from '../utils/apiServices';
 import { FcLike, FcDislike } from "react-icons/fc";
 
 
 const Favorite = props => {
 
-  const { favorites, removeFavorite } = useFavorites()
+  const [favorites, setFavorites] = useState([])
+  const { token } = useAuth()
+
+
+  useEffect(() => {
+    const getFavorites = async () => {
+      const { data } = await api.user.favorites.getFavorites({
+        userAuthToken: token,
+      }).request
+      setFavorites(data)
+    }
+    getFavorites()
+  }, []);
+
+  const removeFavorite = async (id) => {
+    const { data } = await api.user.favorites.deleteFromFavorites({
+      userAuthToken: token,
+      productId: id,
+    }).request
+    setFavorites(data)
+  }
+
 
   return (
     <div>
@@ -21,7 +42,7 @@ const Favorite = props => {
               <div className="flex flex-col items-center justify-center w-full h-full">
                 <div className="container grid w-full grid-cols-3 gap-4 mx-auto">
                   {favorites?.map((p) => (
-                    <div className=" w-[282px] h-[441px] ">
+                    <div className=" w-[282px] h-[441px] " key={p.id}>
                       <div className="relative">
                         <img src={p.imageUrls[0]} alt="Producto 1" className="object-cover w-[282px] h-[370px] rounded-lg" />
 

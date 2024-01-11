@@ -4,7 +4,7 @@ import MatePhoto from '../../assets/image1.png'
 import { Formik } from 'formik';
 import React, { useState } from 'react';
 import * as Yup from 'yup';
-import axiosInstance from '../../utils/apiServices';
+import api from '../../utils/apiServices';
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from 'sonner';
 
@@ -37,9 +37,9 @@ const SignUp = props => {
             <img src={MatePhoto} alt="unsplash random" className="object-cover w-full h-full" />
           </div>
 
-          <div className="flex items-start w-full max-w-3xl px-8 mx-auto lg:px-12 lg:w-3/5 py-16">
+          <div className="flex items-start w-full max-w-3xl px-8 py-16 mx-auto lg:px-12 lg:w-3/5">
             <div className="w-full">
-              <h1 className="text-2xl font-semibold tracking-wider  capitalize ">
+              <h1 className="text-2xl font-semibold tracking-wider capitalize ">
                 Registrarme
               </h1>
 
@@ -84,21 +84,14 @@ const SignUp = props => {
                 validationSchema={SignupSchema}
                 onSubmit={async (values, actions) => {
                   try {
-                    await axiosInstance.post(
-                      '/auth/signup',
-                      JSON.stringify({
-                        name: values.name,
-                        username: values.username,
-                        email: values.email,
-                        password: values.password,
-                        passwordConfirmation: values.passwordConfirmation,
-                        isUser: isUser
-                      }),
-                      {
-                        headers: {
-                          'Content-Type': 'application/json'
-                        }
-                      }
+                    await api.auth.register({ data: JSON.stringify({
+                      name: values.name,
+                      username: values.username,
+                      email: values.email,
+                      password: values.password,
+                      passwordConfirmation: values.passwordConfirmation,
+                      isUser: isUser
+                    }) }
                     );
                     toast.success('Cuenta creada exitosamente');
                     navigate('/login')
@@ -130,7 +123,7 @@ const SignUp = props => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values.name}
-                        className='block w-full px-5 py-3 mt-2   border rounded-lg focus:outline-none focus:ring focus:ring-opacity-40'
+                        className='block w-full px-5 py-3 mt-2 border rounded-lg focus:outline-none focus:ring focus:ring-opacity-40'
                       />
                     </div>
                     {errors.name && touched.name && errors.name}
@@ -143,7 +136,7 @@ const SignUp = props => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values.email}
-                        className='block w-full px-5 py-3  bg-white border focus:outline-none focus:ring focus:ring-opacity-40'
+                        className='block w-full px-5 py-3 bg-white border focus:outline-none focus:ring focus:ring-opacity-40'
                       />
                     </div>
                     {errors.email && touched.email && errors.email}
@@ -155,7 +148,7 @@ const SignUp = props => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values.username}
-                        className='block w-full px-5 py-3 mt-2  bg-white border  focus:outline-none focus:ring focus:ring-opacity-40'
+                        className='block w-full px-5 py-3 mt-2 bg-white border focus:outline-none focus:ring focus:ring-opacity-40'
                       />
                     </div>
                     {errors.username && touched.username && errors.username}
@@ -168,7 +161,7 @@ const SignUp = props => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values.password}
-                        className='block w-full px-5 py-3 mt-2  focus:outline-none focus:ring focus:ring-opacity-40'
+                        className='block w-full px-5 py-3 mt-2 focus:outline-none focus:ring focus:ring-opacity-40'
                       />
                     </div>
                     {errors.password && touched.password && errors.password}
@@ -187,12 +180,12 @@ const SignUp = props => {
                     {errors.passwordConfirmation && touched.passwordConfirmation && errors.passwordConfirmation}
 
                     <div className="flex items-center space-x-2">
-                      <input type="checkbox" className="w-4 h-4  rounded " />
+                      <input type="checkbox" className="w-4 h-4 rounded " />
                       <span className="text-sm ">Acepta nuestros terminos y condiciones</span>
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <input type="checkbox" className="w-4 h-4  rounded " />
+                      <input type="checkbox" className="w-4 h-4 rounded " />
                       <span className="text-sm ">Quiere recibir promociones y descuentos a su email</span>
                     </div>
 

@@ -17,7 +17,6 @@ export const verifyToken = async (token) => {
   try {
     const { payload } = await jwtVerify(token, new TextEncoder().encode(import.meta.env.VITE_JWT_SECRET));
 
-    console.log(payload);
     return payload;
   } catch (error) {
     return false;
