@@ -361,5 +361,23 @@ export default {
         data,
       })
     },
+  },
+  profile: {
+    getProfile: ({ userAuthToken }) =>
+      requestBuilder({
+        method: "GET",
+        url: "/profile",
+        userAuthToken,
+      }),
+    updateProfile: ({ userAuthToken, data }) =>
+      requestBuilder({
+        method: "PUT",
+        url: "/profile",
+        userAuthToken,
+        data,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
   }
 }

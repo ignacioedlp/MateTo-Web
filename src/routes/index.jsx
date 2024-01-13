@@ -22,7 +22,8 @@ import Welcome from "../pages/Welcome";
 import Home from "../pages/Home";
 
 // User pages
-import Profile from "../pages/Profile";
+import Profile from "../pages/profile/Profile";
+import Purchases from "../pages/profile/Purchases";
 import Products from "../pages/Products";
 import Cart from "../pages/Cart";
 import Favorite from "../pages/Favorite";
@@ -49,7 +50,6 @@ const Routes = () => {
           element: <Products />,
         },
         {
-          // View single product, el id del producto se pasa como parametro
           path: "/products/:id",
           element: <Product />,
         },
@@ -61,6 +61,10 @@ const Routes = () => {
           path: "/favorite",
           element: <Favorite />,
         },
+        {
+          path: "/purchases",
+          element: <Purchases />,
+        }
       ],
     },
   ];

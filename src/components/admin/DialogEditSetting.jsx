@@ -64,10 +64,10 @@ const DialogEditSetting = ({ nameConfig, handleEditConfig, setting, showModal, c
                 </div>
               ))}
               <div className='flex flex-row gap-4'>
-                <button type="outlineGray" className="mr-2">
+                <button className='px-4 py-2 mr-2 border border-black rounded-lg'>
                   Cancel
                 </button>
-                <button type="submit" className='text-white bg-black hover:bg-black-500'>
+                <button type="submit" className='px-4 py-2 text-white bg-black rounded-lg'>
                   Confirm
                 </button>
               </div>

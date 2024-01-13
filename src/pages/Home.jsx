@@ -17,8 +17,12 @@ const Home = props => {
   const fetchData = async () => {
     const productsData = await api.products.getProducts({
       userAuthToken: token,
+      params: {
+        pageSize: 5,
+        page: 1
+      }
     }).request
-    setProducts(productsData.data)
+    setProducts(productsData.data.products)
 
     const vendorsData = await api.vendors.getVendors({
       userAuthToken: token,

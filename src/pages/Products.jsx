@@ -10,6 +10,7 @@ import { useSettings } from '../provider/settingsProvider';
 import axios from 'axios'
 import { useAuth } from '../provider/authProvider';
 import { useNavigate } from "react-router-dom";
+import { Pagination } from "keep-react";
 
 
 
@@ -41,7 +42,8 @@ const Products = () => {
     priceMax: 100000,
   });
   const [selectedProductCategory, setSelectedProductCategory] = useState(null);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [section, setSection] = useState("news");
 
   const { settings } = useSettings();
@@ -83,10 +85,13 @@ const Products = () => {
         priceMax: range.priceMax,
         colors: selectedColors,
         sizes: selectedSizes,
+        pageSize: 1,
+        page: currentPage
       }
     }).request
 
-    setProducts(response.data)
+    setProducts(response.data.products)
+    setTotalPages(response.data.totalPages)
   };
 
   const addToFavorites = async (id) => {
@@ -116,7 +121,7 @@ const Products = () => {
 
   useEffect(() => {
     fetchData()
-  }, [selectedProductType, selectedProductCategory, range, selectedColors, selectedSizes]);
+  }, [selectedProductType, selectedProductCategory, range, selectedColors, selectedSizes, currentPage]);
 
   return (
     <div>
@@ -245,9 +250,10 @@ const Products = () => {
           {isLoading ?
             (<SkeletonComponent />) : (
 
-              products?.length > 0 ?
+              products?.length > 0 ? <div>
                 <div className="grid w-full grid-cols-3 gap-4 mx-auto">
                   {products?.map((p) => (
+
                     <div className=" w-[282px] h-[441px] " key={p.id}>
                       <div className="relative">
                         <img src={p.imageUrls[0]} alt="Producto 1" className="object-cover w-[282px] h-[370px] rounded-lg" />
@@ -270,11 +276,17 @@ const Products = () => {
                       </div>
                     </div>
                   ))
-                  }</div> : (
-                  <div className="flex items-center justify-center w-full ">
-                    <p className="text-2xl font-semibold text-center text-neutral-700 font-inter">No hay productos</p>
-                  </div>
-                ))}
+                  }</div><Pagination
+                  currentPage={currentPage}
+                  onPageChange={(val) => setCurrentPage(val)}
+                  totalPages={totalPages}
+                  iconWithOutText
+                  prevNextShape="roundSquare"
+                /></div> : (
+                <div className="flex items-center justify-center w-full ">
+                  <p className="text-2xl font-semibold text-center text-neutral-700 font-inter">No hay productos</p>
+                </div>
+              ))}
         </div>
       </section >
     </div >
