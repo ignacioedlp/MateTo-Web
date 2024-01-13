@@ -5,8 +5,10 @@ import { BiSolidPurchaseTagAlt } from "react-icons/bi";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { MdOutlinePayments, MdDashboard } from "react-icons/md";
 import { IoAccessibility, IoAnalytics } from "react-icons/io5";
+import { IoMdSettings, IoIosBusiness } from "react-icons/io";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+
 
 
 const SideBar = ({ page }) => {
@@ -39,7 +41,7 @@ const SideBar = ({ page }) => {
             <ul className="pt-4 space-y-4 border-t border-gray-100">
               <li>
                 <a
-                  href="/vendor"
+                  href="/admin"
                   className={`group relative flex justify-center rounded px-2 py-1.5 ${page === 'Home' ? "bg-black" : " bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700"} `}
                 >
                   <IoAnalytics size={20} className={`opacity-75 ${page === 'Home' && "text-white opacity-100"}`} />
@@ -55,29 +57,44 @@ const SideBar = ({ page }) => {
 
               <li>
                 <a
-                  href="/vendor/products"
-                  className={`group relative flex justify-center rounded px-2 py-1.5 ${page === 'Products' ? "bg-black" : " bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700"} `}
+                  href="/admin/customers"
+                  className={`group relative flex justify-center rounded px-2 py-1.5 ${page === 'Customers' ? "bg-black" : " bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700"} `}
                 >
-                  <BiSolidPurchaseTagAlt size={20} className={`opacity-75 ${page === 'Products' && "text-white opacity-100"}`} />
+                  <IoIosBusiness size={20} className={`opacity-75 ${page === 'Customers' && "text-white opacity-100"}`} />
 
                   <span
                     className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100"
                   >
-                    Productos
+                    Customers
                   </span>
                 </a>
               </li>
 
               <li>
                 <a
-                  href="/vendor/orders" className={`group relative flex justify-center rounded px-2 py-1.5 ${page === 'Orders' ? "bg-black" : " bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700"} `}
+                  href="/admin/users"
+                  className={`group relative flex justify-center rounded px-2 py-1.5 ${page === 'Users' ? "bg-black" : " bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700"} `}
                 >
-                  <MdOutlinePayments size={20} className={`opacity-75 ${page === 'Orders' && "text-white "}`} />
+                  <IoAccessibility size={20} className={`opacity-75 ${page === 'Users' && "text-white opacity-100"}`} />
 
                   <span
                     className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100"
                   >
-                    Ordenes
+                    Usuarios
+                  </span>
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="/admin/settings" className={`group relative flex justify-center rounded px-2 py-1.5 ${page === 'Settings' ? "bg-black" : " bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700"} `}
+                >
+                  <IoMdSettings size={20} className={`opacity-75 ${page === 'Settings' && "text-white "}`} />
+
+                  <span
+                    className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100"
+                  >
+                    Ajuster
                   </span>
                 </a>
               </li>

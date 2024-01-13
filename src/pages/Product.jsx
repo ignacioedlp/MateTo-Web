@@ -12,6 +12,7 @@ import { RxSize } from "react-icons/rx";
 
 const Product = () => {
   const [product, setProduct] = useState(null);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
   const { id } = useParams();
   const { token } = useAuth();
 
@@ -23,6 +24,7 @@ const Product = () => {
           userAuthToken: token,
         }).request
         setProduct(response.data);
+        setSelectedPhoto(response.data.imageUrls[0]);
       } catch (error) {
         console.error('Error al obtener los datos del producto:', error);
       }
@@ -42,8 +44,6 @@ const Product = () => {
         },
       }).request
 
-      console.log(response.data);
-
     } catch (error) {
       console.error('Error al agregar al carrito:', error);
     }
@@ -60,11 +60,13 @@ const Product = () => {
             <div className='flex flex-col justify-center gap-4'>
               {
                 product.imageUrls?.map((image, index) => (
-                  <img src={image} alt="" className="object-cover w-16 h-16 rounded-lg" key={index} />
+                  <div className={`w-17 h-17 rounded-xl ${selectedPhoto === image && "border-[1px] border-black"}`} onClick={() => setSelectedPhoto(image)}>
+                    <img src={image} alt="" className={`object-cover w-16 h-16 rounded-xl ${selectedPhoto === image && "border-2 border-white"}`} key={index} />
+                  </div>
                 ))
               }
             </div>
-            <img alt="ecommerce" className="lg:w-[520px] w-full lg:h-[785px] h-[785px] object-fill object-center" src={product.imageUrls[0]} />
+            <img alt="ecommerce" className="lg:w-[520px] w-full lg:h-[785px] h-[785px] object-fill object-center" src={selectedPhoto} />
 
             <div className="lg:w-[534px] w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
               <h2 className="text-sm tracking-widest text-gray-500 title-font">{product.author.name}</h2>
@@ -132,42 +134,42 @@ const Product = () => {
               </div>
               <div className="w-96 h-11 justify-start items-start gap-3.5 flex border-b-2 border-gray-100 mb-8">
                 <button className="flex items-center justify-center gap-4 px-10 py-3 rounded-lg cursor-pointer bg-stone-800" onClick={() => addCart(product.id)}>,
-                <LuShoppingCart className="w-5 h-5 text-white " color="white" />
-                <div className="text-lg font-semibold text-center text-white font-inter">Agregar</div>
-              </button>
-              <div className="flex items-center justify-center gap-3 px-10 py-3 border rounded-lg border-neutral-700">
-                <div className="text-lg font-bold text-center text-neutral-700 font-inter">${product.price}</div>
-              </div>
-            </div>
-            <div className='flex flex-wrap gap-4'>
-              <div className="w-56 h-12 pr-12 pb-1.5 justify-start items-center gap-3.5 inline-flex">
-                <div className="relative flex flex-col items-start justify-start w-11 h-11">
-                  <div className="flex items-center justify-center rounded-full w-11 h-11 bg-neutral-100" >
-                    <CiCreditCard1 className="w-5 h-5 text-neutral-700 " />
-                  </div>
+                  <LuShoppingCart className="w-5 h-5 text-white " color="white" />
+                  <div className="text-lg font-semibold text-center text-white font-inter">Agregar</div>
+                </button>
+                <div className="flex items-center justify-center gap-3 px-10 py-3 border rounded-lg border-neutral-700">
+                  <div className="text-lg font-bold text-center text-neutral-700 font-inter">${product.price}</div>
                 </div>
-                <div className="text-lg font-medium text-neutral-700 font-inter">Pago seguro</div>
               </div>
-              <div className="w-56 h-min pr-12 pb-1.5 justify-start items-center gap-3.5 inline-flex">
-                <div className="relative flex flex-col items-start justify-start w-11 h-11">
-                  <div className="flex items-center justify-center rounded-full w-11 h-11 bg-neutral-100" >
-                    <CiDeliveryTruck className="w-5 h-5 text-neutral-700 " />
+              <div className='flex flex-wrap gap-4'>
+                <div className="w-56 h-12 pr-12 pb-1.5 justify-start items-center gap-3.5 inline-flex">
+                  <div className="relative flex flex-col items-start justify-start w-11 h-11">
+                    <div className="flex items-center justify-center rounded-full w-11 h-11 bg-neutral-100" >
+                      <CiCreditCard1 className="w-5 h-5 text-neutral-700 " />
+                    </div>
                   </div>
+                  <div className="text-lg font-medium text-neutral-700 font-inter">Pago seguro</div>
                 </div>
-                <div className="text-lg font-medium text-neutral-700 font-inter">Envio gratis</div>
-              </div>
-              <div className="w-full h-min pr-12 pb-1.5 justify-start items-center gap-3.5 inline-flex">
-                <div className="relative flex flex-col items-start justify-start w-11 h-11">
-                  <div className="flex items-center justify-center rounded-full w-11 h-11 bg-neutral-100" >
-                    <RxSize className="w-5 h-5 text-neutral-700 " />
+                <div className="w-56 h-min pr-12 pb-1.5 justify-start items-center gap-3.5 inline-flex">
+                  <div className="relative flex flex-col items-start justify-start w-11 h-11">
+                    <div className="flex items-center justify-center rounded-full w-11 h-11 bg-neutral-100" >
+                      <CiDeliveryTruck className="w-5 h-5 text-neutral-700 " />
+                    </div>
                   </div>
+                  <div className="text-lg font-medium text-neutral-700 font-inter">Envio gratis</div>
                 </div>
-                <div className="text-lg font-medium text-neutral-700 font-inter">Tamaño deseado</div>
+                <div className="w-full h-min pr-12 pb-1.5 justify-start items-center gap-3.5 inline-flex">
+                  <div className="relative flex flex-col items-start justify-start w-11 h-11">
+                    <div className="flex items-center justify-center rounded-full w-11 h-11 bg-neutral-100" >
+                      <RxSize className="w-5 h-5 text-neutral-700 " />
+                    </div>
+                  </div>
+                  <div className="text-lg font-medium text-neutral-700 font-inter">Tamaño deseado</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-    </div>
       </section >
 
     </div >

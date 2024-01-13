@@ -66,8 +66,8 @@ const Dashboard = () => {
     <div className='flex flex-col gap-2'>
       <Navbar />
       <div className='flex '>
-        <SideBar page={"products"} />
-        <div className='mx-auto container'>
+        <SideBar page={"Products"} />
+        <div className='container mx-auto'>
           <TableProducts products={products} handleUpdateProduct={updateProduct} handleDeleteProduct={deleteProduct} handleCreateProduct={createProduct} settings={settings} />
         </div>
       </div>

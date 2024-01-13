@@ -6,10 +6,14 @@ import { FcLike, FcDislike } from "react-icons/fc";
 import { useAuth } from '../provider/authProvider'
 import api from '../utils/apiServices';
 import { useNavigate } from 'react-router-dom'
+import { Spinner, Button } from "keep-react";
+
+
 
 const Cart = props => {
 
   const [cart, setCart] = useState([])
+  const [creationOrder, setCreationOrder] = useState(false)
   const { token } = useAuth()
   const navigate = useNavigate();
 
@@ -46,6 +50,7 @@ const Cart = props => {
   }
 
   const createOrder = async () => {
+    setCreationOrder(true)
     const { data } = await api.purchases.createPurchase({
       userAuthToken: token,
       data: {
@@ -66,6 +71,8 @@ const Cart = props => {
       },
     }).request
 
+    setCreationOrder(false)
+
     if (data.preference.sandbox_init_point) {
       window.location.href = data.preference.sandbox_init_point
     }
@@ -74,7 +81,7 @@ const Cart = props => {
 
 
   return (
-    <div>
+    <>
       <Navbar />
       {
         cart?.length > 0 ? (
@@ -83,7 +90,7 @@ const Cart = props => {
             <div className="max-w-screen-xl px-4 py-8 mx-auto sm:px-6 sm:py-12 lg:px-8">
               <div className="max-w-3xl mx-auto">
                 <header className="text-center">
-                  <h1 className="text-xl font-bold text-gray-900 sm:text-3xl">Your Cart</h1>
+                  <h1 className="text-xl font-bold text-gray-900 sm:text-3xl">Tu carrito</h1>
                 </header>
 
                 <div className="mt-8">
@@ -172,12 +179,19 @@ const Cart = props => {
 
 
                       <div className="flex justify-end">
-                        <buttom
-                          onClick={createOrder}
-                          className="block px-5 py-3 text-sm text-gray-100 transition bg-black rounded hover:bg-gray-600"
-                        >
-                          Ir a pagar
-                        </buttom>
+                        {
+                          creationOrder ? (
+                            <Spinner color="gray" size="lg" />
+                          ) : (
+                            <Button
+                              onClick={createOrder}
+                              className="block text-sm text-gray-100 transition bg-black rounded hover:bg-gray-600"
+                            >
+                              Ir a pagar
+                            </Button>
+                          )
+                        }
+
                       </div>
                     </div>
                   </div>
@@ -186,17 +200,12 @@ const Cart = props => {
             </div>
           </section>
         ) : (
-          <div className="flex flex-col items-center justify-center w-full h-full">
-            <div className="flex flex-col items-center justify-center w-full h-full">
-              <h1 className="text-4xl font-bold text-neutral-900">Tu carrito</h1>
-              <div className="flex flex-col items-center justify-center w-full h-full">
-                <h1 className="text-2xl font-bold text-neutral-900">No tienes items</h1>
-              </div>
-            </div>
+          <div className="container flex flex-col items-center justify-center w-full h-full mx-auto my-20">
+            <Spinner color="gray" size="lg" />;
           </div>
         )
       }
-    </div >
+    </>
   )
 }
 

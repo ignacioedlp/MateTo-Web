@@ -1,12 +1,30 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { useState, useEffect } from 'react'
+import Navbar from '../../components/Navbar'
+import SideBar from '../../components/admin/SideBar';
+import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../provider/authProvider';
+import api from '../../utils/apiServices';
 
-const Dashboard = props => {
+
+
+function Dashboard() {
+
+  const navigate = useNavigate();
+  const { token } = useAuth();
+  
+
+  const [analytics, setAnalytics] = useState([])
+
   return (
-    <div>Dashboard</div>
+    <div className='flex flex-col gap-2'>
+      <Navbar />
+      <div className='flex '>
+        <SideBar page={"Home"} />
+        <div className='container flex flex-wrap justify-around mx-auto mt-10'>
+        </div>
+      </div>
+    </div>
   )
 }
-
-Dashboard.propTypes = {}
 
 export default Dashboard

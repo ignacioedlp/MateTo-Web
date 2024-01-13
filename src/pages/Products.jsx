@@ -253,14 +253,14 @@ const Products = () => {
                         <img src={p.imageUrls[0]} alt="Producto 1" className="object-cover w-[282px] h-[370px] rounded-lg" />
 
                         <div className="absolute top-0 right-0 mt-4 mr-4">
-                          <div className="w-[32.36px] h-[32.36px] bg-white rounded-full flex items-center justify-center" onClick={() => { addToFavorites(p.id) }}>
+                          <div className="w-[32.36px] h-[32.36px] bg-white rounded-full flex items-center justify-center cursor-pointer" onClick={() => { addToFavorites(p.id) }}>
                             <FcLike size={15} />
                           </div>
                         </div>
                       </div>
 
                       <div className='flex justify-between mt-3'>
-                        <div className='flex flex-col gap-2 ' onClick={() => navigate(`/products/${p.id}`)}>
+                        <div className='flex flex-col gap-2 cursor-pointer' onClick={() => navigate(`/products/${p.id}`)}>
                           <h3 className="text-base font-semibold ">{p.title}</h3>
                           <p className="text-sm font-medium ">{p.author.name}</p>
                         </div>

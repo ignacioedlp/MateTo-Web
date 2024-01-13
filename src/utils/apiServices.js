@@ -83,12 +83,18 @@ export default {
       requestBuilder({
         method: "POST",
         url: "/auth/signin",
+        headers: {
+          "Content-Type": "application/json",
+        },
         data,
       }),
     register: ({ data }) =>
       requestBuilder({
         method: "POST",
         url: "/auth/signup",
+        headers: {
+          "Content-Type": "application/json",
+        },
         data,
       }),
   },
@@ -164,6 +170,13 @@ export default {
       }),
   },
   vendors: {
+    getAllVendors: ({ userAuthToken }) =>
+      requestBuilder({
+        method: "GET",
+        url: "/vendors",
+        userAuthToken,
+      }),
+
     getVendors: ({ userAuthToken, params }) =>
       requestBuilder({
         method: "GET",
@@ -171,6 +184,25 @@ export default {
         userAuthToken,
         params,
       }),
+
+    orders: {
+      getOrders: ({ userAuthToken }) =>
+        requestBuilder({
+          method: "GET",
+          url: "/orders",
+          userAuthToken,
+        }),
+
+    },
+
+    analytics: {
+      getAnalytics: ({ userAuthToken }) =>
+        requestBuilder({
+          method: "GET",
+          url: "/analytics",
+          userAuthToken,
+        }),
+    },
   },
   settings:
   {
@@ -193,6 +225,12 @@ export default {
         url: "/user",
         userAuthToken,
         data,
+      }),
+    getAllUsers: ({ userAuthToken }) =>
+      requestBuilder({
+        method: "GET",
+        url: "/users",
+        userAuthToken,
       }),
     cart: {
       getCart: ({ userAuthToken }) =>
@@ -241,6 +279,87 @@ export default {
           url: `/favorites/${productId}`,
           userAuthToken,
         }),
-    }
+    },
+
   },
+  roles: {
+    getRoles: ({ userAuthToken }) =>
+      requestBuilder({
+        method: "GET",
+        url: "/roles",
+        userAuthToken,
+      }),
+  },
+  colors: {
+    add: ({ userAuthToken, data }) => {
+      requestBuilder({
+        method: "POST",
+        url: "/colors",
+        userAuthToken,
+        data,
+      })
+    },
+    edit: ({ userAuthToken, id, data }) => {
+      requestBuilder({
+        method: "PUT",
+        url: `/colors/${id}`,
+        userAuthToken,
+        data,
+      })
+    },
+  },
+  productCategories: {
+    add: ({ userAuthToken, data }) => {
+      requestBuilder({
+        method: "POST",
+        url: "/productCategories",
+        userAuthToken,
+        data,
+      })
+    },
+    edit: ({ userAuthToken, id, data }) => {
+      requestBuilder({
+        method: "PUT",
+        url: `/productCategories/${id}`,
+        userAuthToken,
+        data,
+      })
+    },
+  },
+  productTypes: {
+    add: ({ userAuthToken, data }) => {
+      requestBuilder({
+        method: "POST",
+        url: "/productTypes",
+        userAuthToken,
+        data,
+      })
+    },
+    edit: ({ userAuthToken, id, data }) => {
+      requestBuilder({
+        method: "PUT",
+        url: `/productTypes/${id}`,
+        userAuthToken,
+        data,
+      })
+    },
+  },
+  sizes: {
+    add: ({ userAuthToken, data }) => {
+      requestBuilder({
+        method: "POST",
+        url: "/sizes",
+        userAuthToken,
+        data,
+      })
+    },
+    edit: ({ userAuthToken, id, data }) => {
+      requestBuilder({
+        method: "PUT",
+        url: `/sizes/${id}`,
+        userAuthToken,
+        data,
+      })
+    },
+  }
 }

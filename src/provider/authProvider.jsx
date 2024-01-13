@@ -70,7 +70,8 @@ const AuthProvider = ({ children }) => {
       setToken: setTokenAndUser,
       user,
       setUser,
-      role
+      role,
+      clearAuth
     }),
     [token, user]
   );

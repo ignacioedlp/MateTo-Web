@@ -84,15 +84,16 @@ const SignUp = props => {
                 validationSchema={SignupSchema}
                 onSubmit={async (values, actions) => {
                   try {
-                    await api.auth.register({ data: JSON.stringify({
-                      name: values.name,
-                      username: values.username,
-                      email: values.email,
-                      password: values.password,
-                      passwordConfirmation: values.passwordConfirmation,
-                      isUser: isUser
-                    }) }
-                    );
+                    await api.auth.register({
+                      data: {
+                        name: values.name,
+                        username: values.username,
+                        email: values.email,
+                        password: values.password,
+                        passwordConfirmation: values.passwordConfirmation,
+                        isUser: isUser
+                      }
+                    });
                     toast.success('Cuenta creada exitosamente');
                     navigate('/login')
                   } catch (error) {

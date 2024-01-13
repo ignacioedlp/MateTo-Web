@@ -8,12 +8,14 @@ import SignUp from "../pages/auth/SignUp";
 
 // Vendor pages
 import VendorDashboard from "../pages/vendor/Dashboard";
-import Purchases from "../pages/vendor/Purchases";
+import Orders from "../pages/vendor/Orders";
 import VendorProducts from "../pages/vendor/Products";
 
 // Admin pages
 import AdminDashboard from "../pages/admin/Dashboard";
 import Settings from "../pages/admin/Settings";
+import Vendors from "../pages/admin/Vendors";
+import Users from "../pages/admin/Users";
 
 // Public pages
 import Welcome from "../pages/Welcome";
@@ -77,8 +79,8 @@ const Routes = () => {
           element: <VendorProducts />,
         },
         {
-          path: "/vendor/purchases/",
-          element: <Purchases />
+          path: "/vendor/orders/",
+          element: <Orders />
         },
 
       ],
@@ -98,6 +100,14 @@ const Routes = () => {
           path: "/admin/settings",
           element: <Settings />,
         },
+        {
+          path: "/admin/customers",
+          element: <Vendors />,
+        },
+        {
+          path: "/admin/users",
+          element: <Users />,
+        }
       ],
     },
   ];

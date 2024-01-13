@@ -43,10 +43,10 @@ const Login = props => {
                 onSubmit={async (values, actions) => {
                   try {
                     const response = await api.auth.login({
-                      data: JSON.stringify({
+                      data: {
                         email: values.email,
                         password: values.password,
-                      })
+                      }
                     }
                     ).request
                     toast.success('Sesion iniciada correctamente 🚀 ');

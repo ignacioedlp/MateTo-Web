@@ -22,8 +22,17 @@ const SettingsProvider = ({ children }) => {
     fetchSettings();
   }, []);
 
+  const refreshSettings = async () => {
+    try {
+      const response = await api.settings.getSettings().request;
+      setSettings(response.data);
+    } catch (error) {
+      console.error('Error al obtener los ajustes:', error);
+    }
+  }
+
   return (
-    <SettingsContext.Provider value={{ settings }}>
+    <SettingsContext.Provider value={{ settings, refreshSettings }}>
       {children}
     </SettingsContext.Provider>
   );
