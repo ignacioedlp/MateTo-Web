@@ -1,9 +1,6 @@
 import React from 'react'
 import { useAuth } from '../../provider/authProvider'
 import { decodeToken } from '../../utils/jwt';
-import { BiSolidPurchaseTagAlt } from "react-icons/bi";
-import { LuLayoutDashboard } from "react-icons/lu";
-import { MdOutlinePayments, MdDashboard } from "react-icons/md";
 import { IoAccessibility, IoAnalytics } from "react-icons/io5";
 import { IoMdSettings, IoIosBusiness } from "react-icons/io";
 import axios from "axios";

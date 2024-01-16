@@ -1,8 +1,7 @@
 import React from 'react'
-import { Avatar, Button, Table } from 'keep-react'
+import { Table } from 'keep-react'
 import { ArrowsDownUp } from 'phosphor-react'
 import moment from 'moment'
-import { Accordion } from "keep-react";
 
 
 const TablePurchases = ({ purchases }) => {
@@ -37,7 +36,7 @@ const TablePurchases = ({ purchases }) => {
           {
             purchases?.map((purchase, index) => (
 
-              <Table.Row className="bg-white">
+              <Table.Row className="bg-white" key={index}>
 
                 <Table.Cell>
                   <div className="flex items-center gap-3">

@@ -97,6 +97,16 @@ export default {
         },
         data,
       }),
+    changePassword: ({ data, userAuthToken }) =>
+      requestBuilder({
+        method: "POST",
+        url: "/auth/change-password",
+        userAuthToken,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data,
+      }),
   },
   products: {
     getProducts: ({ userAuthToken, params }) =>
@@ -307,6 +317,13 @@ export default {
         data,
       })
     },
+    delete: ({ userAuthToken, id }) => {
+      requestBuilder({
+        method: "DELETE",
+        url: `/colors/${id}`,
+        userAuthToken,
+      })
+    }
   },
   productCategories: {
     add: ({ userAuthToken, data }) => {
@@ -325,6 +342,13 @@ export default {
         data,
       })
     },
+    delete: ({ userAuthToken, id }) => {
+      requestBuilder({
+        method: "DELETE",
+        url: `/productCategories/${id}`,
+        userAuthToken,
+      })
+    }
   },
   productTypes: {
     add: ({ userAuthToken, data }) => {
@@ -343,6 +367,13 @@ export default {
         data,
       })
     },
+    delete: ({ userAuthToken, id }) => {
+      requestBuilder({
+        method: "DELETE",
+        url: `/productTypes/${id}`,
+        userAuthToken,
+      })
+    }
   },
   sizes: {
     add: ({ userAuthToken, data }) => {
@@ -361,6 +392,13 @@ export default {
         data,
       })
     },
+    delete: ({ userAuthToken, id }) => {
+      requestBuilder({
+        method: "DELETE",
+        url: `/sizes/${id}`,
+        userAuthToken,
+      })
+    }
   },
   profile: {
     getProfile: ({ userAuthToken }) =>
@@ -379,5 +417,23 @@ export default {
           "Content-Type": "multipart/form-data",
         },
       }),
-  }
+  },
+  comments: {
+    createComment: ({ userAuthToken, data }) =>
+      requestBuilder({
+        method: "POST",
+        url: "/comments",
+        userAuthToken,
+        data,
+      }),
+  },
+
+  analytics: {
+    getAnalytics: ({ userAuthToken }) =>
+      requestBuilder({
+        method: "GET",
+        url: "/analytics",
+        userAuthToken,
+      }),
+  }, 
 }

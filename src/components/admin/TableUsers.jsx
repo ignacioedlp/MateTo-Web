@@ -1,6 +1,6 @@
 import React from 'react'
-import { Avatar, Button, Table, Badge } from 'keep-react'
-import { ArrowsDownUp, Crown, Cube, DotsThreeOutline, Pencil, Trash, SmileySad } from 'phosphor-react'
+import { Avatar, Table, Badge } from 'keep-react'
+import { ArrowsDownUp, Crown } from 'phosphor-react'
 import moment from 'moment'
 
 const calculateLevel = (totalPurchases) => {
@@ -49,7 +49,7 @@ const TableUsers = ({ users }) => {
         <Table.Body className="divide-y divide-gray-25">
           {
             users?.map((user, index) => (
-              <Table.Row className="bg-white">
+              <Table.Row className="bg-white" key={index}>
                 <Table.Cell>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-4">

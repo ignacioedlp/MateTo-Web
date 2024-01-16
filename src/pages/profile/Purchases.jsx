@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { Sidebar } from "keep-react";
 import {
-  Chat,
-  LockSimple,
   ShoppingBagOpen,
-  ShoppingCart,
-  SignIn,
-  SquaresFour,
-  UserPlus,
   User,
 } from "phosphor-react";
 import Navbar from '../../components/Navbar'
@@ -17,12 +10,11 @@ import { useAuth } from '../../provider/authProvider'
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import apiServices from '../../utils/apiServices';
-import { decodeToken } from '../../utils/jwt';
 import TablePurchases from '../../components/TablePurchases';
 
 
 
-const Purchases = props => {
+const Purchases = () => {
 
   const { token, clearAuth } = useAuth();
   const navigate = useNavigate();

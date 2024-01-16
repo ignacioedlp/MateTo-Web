@@ -1,11 +1,6 @@
-import React, { Fragment, useState } from 'react'
-import { Modal, Button } from "keep-react";
-import { PencilSimpleLine, Check, CaretDown } from "phosphor-react";
-import { Label, TextInput, Textarea } from "keep-react";
-import { Listbox, Transition } from '@headlessui/react'
-import { useSettings } from "../../provider/settingsProvider";
-import { Switch } from '@headlessui/react'
-import { useEffect } from 'react';
+import React from 'react'
+import { Modal } from "keep-react";
+import { PencilSimpleLine } from "phosphor-react";
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 
@@ -34,8 +29,6 @@ const NewSettingSchema = Yup.object().shape({
 
 const DialogNewSetting = ({ nameConfig, handleAddConfig, showModal, close }) => {
 
-  const [newSetting, setNewSetting] = useState({})
-
   return (
     <Modal
       icon={<PencilSimpleLine size={28} color="black" />}
@@ -48,13 +41,13 @@ const DialogNewSetting = ({ nameConfig, handleAddConfig, showModal, close }) => 
         <Formik
           initialValues={{ /* initial values based on formsConfigs */ }}
           validationSchema={NewSettingSchema}
-          onSubmit={(values, { resetForm }) => {
-            handleAddConfig(nameConfig, values);
+          onSubmit={async (values, { resetForm }) => {
+            await handleAddConfig(nameConfig, values);
             resetForm();
             close();
           }}
         >
-          {({ errors, touched }) => (
+          {({ errors, touched, isSubmitting }) => (
             <Form>
               {Object.keys(formsConfigs[nameConfig]).map((key, index) => (
                 <div className="mb-4 form-group" key={index}>
@@ -69,7 +62,7 @@ const DialogNewSetting = ({ nameConfig, handleAddConfig, showModal, close }) => 
                 <button className='px-4 py-2 mr-2 border border-black rounded-lg' onClick={close}>
                   Cancel
                 </button>
-                <button type="submit" className='px-4 py-2 text-white bg-black rounded-lg'>
+                <button type="submit" className='px-4 py-2 text-white bg-black rounded-lg' disabled={isSubmitting}>
                   Confirm
                 </button>
               </div>

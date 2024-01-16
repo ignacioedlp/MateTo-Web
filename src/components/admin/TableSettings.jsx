@@ -1,10 +1,8 @@
-import React from 'react'
-import { Avatar, Button, Table, Popover, Badge } from 'keep-react'
+import React, { useState } from 'react'
+import { Button, Table, Popover, Badge } from 'keep-react'
 import {
-  ArrowsDownUp, Pencil, DotsThreeOutline, Trash, Crown, SmileySad, Cube
+  Pencil, DotsThreeOutline, Trash, Crown, SmileySad, Cube
 } from 'phosphor-react'
-import moment from 'moment'
-import { useState } from 'react'
 
 const makeSingular = (string) => {
   if (string.endsWith('es')) {
@@ -84,7 +82,7 @@ const TableSettings = ({ settings, headers, customColumn = null, title, settingN
         <Table.Body className="divide-y divide-gray-25">
           {
             settings?.map((setting, index) => (
-              <Table.Row className="bg-white">
+              <Table.Row className="bg-white" key={index}>
                 <Table.Cell>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-4">
@@ -141,7 +139,7 @@ const TableSettings = ({ settings, headers, customColumn = null, title, settingN
                       <ul>
                         <li className="px-2 py-1 rounded hover:bg-metal-100">
                           <button className="flex items-center justify-between w-full font-normal text-body-4 text-metal-600" onClick={() => {
-                            handleDeleteSetting(settingName, setting)
+                            handleDeleteSetting(settingName, setting.id)
                           }}>
                             <span>Delete</span>
                             <span>

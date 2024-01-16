@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
 import Navbar from '../components/Navbar'
 import api from '../utils/apiServices';
 import MatetoSvg from '../assets/mateto.svg'
@@ -7,8 +6,7 @@ import { Skeleton, Carousel } from "keep-react";
 import { useAuth } from '../provider/authProvider';
 
 
-
-const Home = props => {
+const Home = () => {
 
   const [products, setProducts] = useState([])
   const [vendors, setVendors] = useState([])
@@ -27,8 +25,10 @@ const Home = props => {
     const vendorsData = await api.vendors.getVendors({
       userAuthToken: token,
     }).request
-    setVendors(vendorsData.data)
 
+    // necesito dividirlo en 4 arrays
+    const { data: vendors } = vendorsData;
+    setVendors(vendors)
   }
 
   useEffect(() => {
@@ -157,15 +157,15 @@ const Home = props => {
         <div className="grid gap-8 mt-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {
             vendors?.length > 0 ?
-              [0, 1, 2, 3].map((item, index) => {
+              vendors?.map((item, index) => {
                 return (
                   <div key={index} className="flex flex-col items-center justify-center w-full h-full ">
                     <div className="flex flex-col items-start justify-center w-full h-full">
-                      <img className="object-cover object-center w-full h-48 mx-auto rounded-lg" src="https://images.unsplash.com/photo-1682688759350-050208b1211c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHx8" alt="avatar" />
+                      <img className="object-cover object-center w-full h-48 mx-auto rounded-lg" src={item?.imageProfile} alt="avatar" />
 
                       <div className="mt-4">
-                        <h1 className="text-xl font-semibold text-gray-800">{vendors[0]?.username}</h1>
-                        <p className="mt-1 text-base font-medium text-gray-600">{vendors[0]?.email}</p>
+                        <h1 className="text-xl font-semibold text-gray-800">{item?.username}</h1>
+                        {/* <p className="mt-1 text-base font-medium text-gray-600">{item?.email}</p> */}
                       </div>
                     </div>
                   </div>
@@ -187,7 +187,6 @@ const Home = props => {
               })
           }
         </div>
-
       </section>
 
       <footer className="">

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Navbar from '../../components/Navbar'
 import SideBar from '../../components/admin/SideBar';
-import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../provider/authProvider';
 import api from '../../utils/apiServices';
 import { Tabs } from "keep-react";
@@ -17,7 +16,6 @@ import DialogNewSetting from '../../components/admin/DialogNewSetting';
 
 function Settings() {
 
-  const navigate = useNavigate();
   const { token } = useAuth();
   const { settings, refreshSettings } = useSettings();
 

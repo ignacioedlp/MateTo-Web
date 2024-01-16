@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { Avatar, Sidebar, Skeleton } from "keep-react";
 import {
-  Chat,
-  LockSimple,
   ShoppingBagOpen,
-  ShoppingCart,
-  SignIn,
-  SquaresFour,
-  UserPlus,
   User,
 } from "phosphor-react";
 import Navbar from '../../components/Navbar'
@@ -16,10 +9,10 @@ import { HiOutlineLogout } from "react-icons/hi";
 import { useAuth } from '../../provider/authProvider'
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-import { decodeToken } from '../../utils/jwt';
 import apiServices from '../../utils/apiServices';
 import { Modal, Button } from "keep-react";
 import { CloudArrowUp } from "phosphor-react";
+import { Formik } from 'formik';
 
 export const SkeletonComponent = () => {
   return (
@@ -36,7 +29,7 @@ export const SkeletonComponent = () => {
   );
 }
 
-const Profile = props => {
+const Profile = () => {
 
   const { token, clearAuth } = useAuth();
   const [user, setUser] = useState(null);
@@ -47,9 +40,14 @@ const Profile = props => {
     username: false,
   });
   const [showModal, setShowModal] = useState(false);
+  const [showModalPassword, setShowPassword] = useState(false);
   const [file, setFile] = useState(null);
   const onClickOne = () => {
     setShowModal(!showModal);
+  };
+
+  const onClickPassword = () => {
+    setShowPassword(!showModalPassword);
   };
 
   const handleLogout = () => {
@@ -83,11 +81,6 @@ const Profile = props => {
     formData.append("email", user.email);
     formData.append("username", user.username);
 
-    console.log(
-      user.name
-    )
-
-    console.log(formData.get('name'))
 
     const response = await apiServices.profile.updateProfile({
       userAuthToken: token,
@@ -174,7 +167,7 @@ const Profile = props => {
                     <h5 className="text-[#807D7E] font-semibold text-base">Password</h5>
                     <p className="text-[#3C4242] font-semibold text-lg">********</p>
                   </div>
-                  <button className='text-[#3C4242] font-semibold text-lg '>Cambiar</button>
+                  <button className='text-[#3C4242] font-semibold text-lg ' onClick={onClickPassword}>Cambiar</button>
                 </div>
               ) : (<SkeletonComponent />)
             }
@@ -219,6 +212,113 @@ const Profile = props => {
             Confirm
           </Button>
         </Modal.Footer>
+      </Modal>
+      <Modal
+        icon={<CloudArrowUp size={28} color="#1B4DFF" />}
+        size="md"
+        show={showModalPassword}
+        position="center"
+      >
+        <Modal.Header>Cambia tu contraseña</Modal.Header>
+        <Modal.Body>
+          <div className="space-y-6">
+            <Formik initialValues={{ email: '', newPassword: '', oldPassword: '', passwordConfirmation: '' }}
+              validate={(values) => {
+                const errors = {};
+                if (!values.email) {
+                  errors.email = 'Required';
+                }
+                if (!values.newPassword) {
+                  errors.newPassword = 'Required';
+                }
+                if (!values.oldPassword) {
+                  errors.oldPassword = 'Required';
+                }
+                if (!values.passwordConfirmation) {
+                  errors.passwordConfirmation = 'Required';
+                }
+                if (values.passwordConfirmation !== values.newPassword) {
+                  errors.passwordConfirmation = 'Las contraseñas no coinciden';
+                }
+                return errors;
+              }}
+              onSubmit={async (values, { setSubmitting }) => {
+                await apiServices.auth.changePassword({
+                  userAuthToken: token,
+                  data: values
+                }).request
+                setSubmitting(false);
+                setShowPassword(false);
+              }}
+
+            >
+              {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, resetForm }) => (
+                <form onSubmit={handleSubmit}>
+                  <div className="space-y-6">
+                    <p className="leading-relaxed text-body-5 md:text-body-4 text-metal-500">
+                      Cambia tu contraseña
+                    </p>
+                    <input
+                      type="email"
+                      name="email"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.email}
+                      placeholder="Email"
+                      className={`w-full px-4 py-2 text-body-5 md:text-body-4 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 ${errors.email && touched.email ? 'border-red-500' : ''}`}
+                    />
+                    {errors.email && touched.email && <div className="text-red-500">{errors.email}</div>}<input
+                      type="password"
+                      name="oldPassword"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.oldPassword}
+                      placeholder="Contraseña actual"
+                      className={`w-full px-4 py-2 text-body-5 md:text-body-4 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 ${errors.oldPassword && touched.oldPassword ? 'border-red-500' : ''}`}
+                    />
+                    {errors.oldPassword && touched.oldPassword && <div className="text-red-500">{errors.oldPassword}</div>}
+                    <input
+                      type="password"
+                      name="newPassword"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.newPassword}
+                      placeholder="Nueva contraseña"
+                      className={`w-full px-4 py-2 text-body-5 md:text-body-4 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 ${errors.newPassword && touched.newPassword ? 'border-red-500' : ''}`}
+                    />
+                    {errors.newPassword && touched.newPassword && <div className="text-red-500">{errors.newPassword}</div>}
+                    <input
+                      type="password"
+                      name="passwordConfirmation"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.passwordConfirmation}
+                      placeholder="Confirmar contraseña"
+                      className={`w-full px-4 py-2 text-body-5 md:text-body-4 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 ${errors.passwordConfirmation && touched.passwordConfirmation ? 'border-red-500' : ''}`}
+                    />
+                    {errors.passwordConfirmation && touched.passwordConfirmation && <div className="text-red-500">{errors.passwordConfirmation}</div>}
+
+                  </div>
+                  <div className="flex justify-end gap-4 mt-6">
+                    <button className="px-4 py-2 border border-black rounded-lg" onClick={() => {
+                      resetForm()
+                      onClickPassword()
+                    }}>
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="px-4 py-2 text-white bg-black rounded-lg"
+                    >
+                      Guardar
+                    </button>
+                  </div>
+                </form>
+              )}
+            </Formik>
+          </div>
+        </Modal.Body>
       </Modal>
     </div >
   )

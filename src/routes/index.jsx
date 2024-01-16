@@ -19,9 +19,9 @@ import Users from "../pages/admin/Users";
 
 // Public pages
 import Welcome from "../pages/Welcome";
-import Home from "../pages/Home";
 
 // User pages
+import Home from "../pages/Home";
 import Profile from "../pages/profile/Profile";
 import Purchases from "../pages/profile/Purchases";
 import Products from "../pages/Products";
@@ -122,10 +122,6 @@ const Routes = () => {
       element: <PublicRoute />,
       children: [
         {
-          path: "/",
-          element: <Welcome />,
-        },
-        {
           path: "/login",
           element: <Login />,
         },
@@ -137,9 +133,22 @@ const Routes = () => {
     }
   ];
 
+  const allPublicRoutes = [
+    {
+      path: "/",
+      children: [
+        {
+          path: "/",
+          element: <Welcome />,
+        },
+      ]
+    }
+  ];
+
 
 
   const router = createBrowserRouter([
+    ...allPublicRoutes,
     ...publicRoutes,
     ...adminRoutes,
     ...vendorRoutes,

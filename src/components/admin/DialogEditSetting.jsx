@@ -1,14 +1,8 @@
-import React, { Fragment, useState } from 'react'
-import { Modal, Button } from "keep-react";
-import { PencilSimpleLine, Check, CaretDown } from "phosphor-react";
-import { Label, TextInput, Textarea } from "keep-react";
-import { Listbox, Transition } from '@headlessui/react'
-import { useSettings } from "../../provider/settingsProvider";
-import { Switch } from '@headlessui/react'
-import { useEffect } from 'react';
+import React from 'react'
+import { Modal } from "keep-react";
+import { PencilSimpleLine} from "phosphor-react";
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-
 
 const formsConfigs = {
   'colors': {
@@ -47,12 +41,12 @@ const DialogEditSetting = ({ nameConfig, handleEditConfig, setting, showModal, c
         <Formik
           initialValues={setting}
           validationSchema={SettingSchema}
-          onSubmit={(values) => {
-            handleEditConfig(nameConfig, setting.id, values);
+          onSubmit={async (values) => {
+            await handleEditConfig(nameConfig, setting.id, values);
             close();
           }}
         >
-          {({ errors, touched }) => (
+          {({ errors, touched, isSubmitting }) => (
             <Form>
               {Object.keys(formsConfigs[nameConfig]).map((key, index) => (
                 <div className="mb-4 form-group" key={index}>
@@ -67,7 +61,7 @@ const DialogEditSetting = ({ nameConfig, handleEditConfig, setting, showModal, c
                 <button className='px-4 py-2 mr-2 border border-black rounded-lg'>
                   Cancel
                 </button>
-                <button type="submit" className='px-4 py-2 text-white bg-black rounded-lg'>
+                <button type="submit" className='px-4 py-2 text-white bg-black rounded-lg' disabled={isSubmitting}>
                   Confirm
                 </button>
               </div>

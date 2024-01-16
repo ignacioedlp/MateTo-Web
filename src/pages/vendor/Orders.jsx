@@ -1,7 +1,6 @@
 import React from 'react'
 import Navbar from '../../components/Navbar'
 import SideBar from '../../components/vendor/SideBar';
-import { useNavigate } from "react-router-dom";
 import apiServices from '../../utils/apiServices';
 import { useEffect } from 'react';
 import { useAuth } from '../../provider/authProvider';
@@ -13,7 +12,6 @@ import TableOrders from '../../components/vendor/TableOrders';
 const Orders = () => {
 
   const [orders, setOrders] = useState([])
-  const navigate = useNavigate();
   const { token } = useAuth()
 
   useEffect(() => {

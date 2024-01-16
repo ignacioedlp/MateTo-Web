@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
 import api from '../../utils/apiServices';
 import { useSettings } from '../../provider/settingsProvider';
 import TableProducts from '../../components/vendor/TableProducts';
@@ -23,7 +22,7 @@ const Dashboard = () => {
     const response = await api.products.getProducts({
       userAuthToken: token,
       params: {
-        vendor: decodeToken(token).id,
+        vendor: decodeToken(token).userId,
         pageSize: 1000,
         page: 1
       }
@@ -34,7 +33,7 @@ const Dashboard = () => {
   };
 
   const updateProduct = async (id, data) => {
-    const response = await api.products.updateProduct({
+    await api.products.updateProduct({
       userAuthToken: token,
       id,
       data
@@ -44,7 +43,7 @@ const Dashboard = () => {
   }
 
   const deleteProduct = async (id) => {
-    const response = await api.products.deleteProduct({
+    await api.products.deleteProduct({
       userAuthToken: token,
       id
     }).request
@@ -53,8 +52,7 @@ const Dashboard = () => {
   }
 
   const createProduct = async (data) => {
-    console.log(data);
-    const response = await api.products.createProduct({
+    await api.products.createProduct({
       userAuthToken: token,
       data
     }).request

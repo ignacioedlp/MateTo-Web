@@ -1,22 +1,14 @@
 import React, { Fragment, useState } from 'react'
 import { Modal, Button } from "keep-react";
 import { PencilSimpleLine, Check, CaretDown } from "phosphor-react";
-import { Label, TextInput, Textarea } from "keep-react";
+import { Label} from "keep-react";
 import { Listbox, Transition } from '@headlessui/react'
-import { useSettings } from "../../provider/settingsProvider";
-import { Switch } from '@headlessui/react'
-import { useEffect } from 'react';
-// Import React FilePond
-import { FilePond } from 'react-filepond';
-
-// Import FilePond styles
-import 'filepond/dist/filepond.min.css';
+import { toast } from 'sonner';
 import apiServices from '../../utils/apiServices';
 
 
 
-const ModalCreateProduct = ({ handleCreateProduct, showModal, close, settings }) => {
-
+const ModalCreateProduct = ({ showModal, close, settings }) => {
 
   const [selectedType, setSelectedType] = useState(null)
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -25,8 +17,8 @@ const ModalCreateProduct = ({ handleCreateProduct, showModal, close, settings })
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [price, setPrice] = useState(0)
-  const [checked, setChecked] = useState(false)
   const [files, setFiles] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleFileChange = (event) => {
     setFiles([...event.target.files]);
@@ -73,7 +65,6 @@ const ModalCreateProduct = ({ handleCreateProduct, showModal, close, settings })
                   value={title}
                   color="gray"
                   onChange={(e) => {
-                    console.log(e.target.value)
                     setTitle(e.target.value)
                   }}
                 />
@@ -280,9 +271,6 @@ const ModalCreateProduct = ({ handleCreateProduct, showModal, close, settings })
         </Modal.Body>
         <Modal.Footer>
           <Button type="outlineGray" onClick={() => {
-
-
-
             setSelectedCategory(null)
             setSelectedType(null)
             setSelectedColors([])
@@ -294,45 +282,37 @@ const ModalCreateProduct = ({ handleCreateProduct, showModal, close, settings })
           }}>
             Cancel
           </Button>
-          <Button onClick={() => {
-            // const newProduct = {
-            //   title: title,
-            //   description: description,
-            //   price: price,
-            //   category: selectedCategory?.id,
-            //   published: true,
-            //   type: selectedType?.id,
-            //   colors: selectedColors,
-            //   sizes: selectedSizes,
-            //   images: files,
-            //   stock: 100
-            // }
+          <Button onClick={async () => {
+            try {
+              setSubmitting(true);
+              const formData = new FormData();
+              files.forEach(file => {
+                formData.append('images', file);
+              });
+              formData.append('title', title);
+              formData.append('description', description);
+              formData.append('price', price);
+              formData.append('category', selectedCategory?.id);
+              formData.append('published', true);
+              formData.append('type', selectedType?.id);
+              formData.append('colors', selectedColors);
+              formData.append('sizes', selectedSizes);
+              formData.append('stock', 100);
 
-            console.log(files);
+              await apiServices.products.createProduct({
+                userAuthToken: localStorage.getItem('token'),
+                data: formData
+              }).request
 
+              toast.success('Producto creado correctamente')
 
-            const formData = new FormData();
-            files.forEach(file => {
-              console.log(file);
-              formData.append('images', file);
-            });
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('price', price);
-            formData.append('category', selectedCategory?.id);
-            formData.append('published', true);
-            formData.append('type', selectedType?.id);
-            formData.append('colors', selectedColors);
-            formData.append('sizes', selectedSizes);
-            formData.append('stock', 100);
-            // handleCreateProduct(formData)
+            } catch (error) {
+              toast.error('No se pudo crear el producto')
+            } finally {
+              setSubmitting(false);
+            }
 
-            apiServices.products.createProduct({
-              userAuthToken: localStorage.getItem('token'),
-              data: formData
-            }).request
-
-          }} className='text-white bg-black hover:bg-black-500' >
+          }} className='text-white bg-black hover:bg-black-500' disabled={submitting}>
             Confirm
           </Button>
         </Modal.Footer>

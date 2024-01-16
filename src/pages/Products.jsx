@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
-import RangeSlider from '../components/SliderRange'
 import api from '../utils/apiServices';
 import { Skeleton } from "keep-react";
 import { FcLike } from "react-icons/fc";
 import { LuSettings2 } from "react-icons/lu";
 import { IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
 import { useSettings } from '../provider/settingsProvider';
-import axios from 'axios'
 import { useAuth } from '../provider/authProvider';
 import { useNavigate } from "react-router-dom";
 import { Pagination } from "keep-react";
@@ -85,7 +83,7 @@ const Products = () => {
         priceMax: range.priceMax,
         colors: selectedColors,
         sizes: selectedSizes,
-        pageSize: 1,
+        pageSize: 10,
         page: currentPage
       }
     }).request
@@ -289,6 +287,7 @@ const Products = () => {
               ))}
         </div>
       </section >
+
     </div >
   )
 }

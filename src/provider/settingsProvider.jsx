@@ -1,15 +1,12 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import api from '../utils/apiServices';
 
-// Crear el contexto
 export const SettingsContext = createContext();
 
-// Crear el provider
 const SettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState({});
 
   useEffect(() => {
-    // Función para obtener los ajustes
     const fetchSettings = async () => {
       try {
         const response = await api.settings.getSettings().request;

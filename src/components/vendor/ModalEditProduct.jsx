@@ -3,8 +3,6 @@ import { Modal, Button } from "keep-react";
 import { PencilSimpleLine, Check, CaretDown } from "phosphor-react";
 import { Label, TextInput, Textarea } from "keep-react";
 import { Listbox, Transition } from '@headlessui/react'
-import { useSettings } from "../../provider/settingsProvider";
-import { Switch } from '@headlessui/react'
 import { useEffect } from 'react';
 // Import React FilePond
 import { FilePond } from 'react-filepond';
@@ -14,7 +12,7 @@ import 'filepond/dist/filepond.min.css';
 
 
 
-const ModalEditProduct = ({ handleEditProduct, product, showModal, close, settings }) => {
+const ModalEditProduct = ({ product, showModal, close, settings }) => {
 
 
   const [selectedType, setSelectedType] = useState(null)
@@ -24,8 +22,8 @@ const ModalEditProduct = ({ handleEditProduct, product, showModal, close, settin
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [price, setPrice] = useState(0)
-  const [checked, setChecked] = useState(false)
   const [files, setFiles] = useState([]);
+  const [fileName, setFileName] = useState("");
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -53,12 +51,10 @@ const ModalEditProduct = ({ handleEditProduct, product, showModal, close, settin
   useEffect(() => {
     setSelectedCategory(settings.productCategories?.find(type => type.id === product?.categoryId))
     setSelectedType(settings.productTypes?.find(type => type.id === product?.typeId))
-    setChecked(product?.published)
     settings.colors?.map(color => {
       if (product?.colors.find(c => c.id == color.id)) {
         setSelectedColors([...selectedColors, color.id])
       }
-      console.log(color)
     })
     settings.sizes?.map(size => {
       if (product?.sizes.find(s => s.id == size.id)) {
@@ -68,7 +64,7 @@ const ModalEditProduct = ({ handleEditProduct, product, showModal, close, settin
     setTitle(product?.title)
     setDescription(product?.description)
     setPrice(product?.price)
-  }, [product])
+  }, [product, settings])
 
   return (
     <>
@@ -116,8 +112,8 @@ const ModalEditProduct = ({ handleEditProduct, product, showModal, close, settin
                     onChange={(e) => setPrice(e.target.value)}
                   />
                 </div>
-            
-            
+
+
                 <div>
                   <Label value="Tipo de producto" />
                   <Listbox value={selectedCategory} onChange={setSelectedCategory}>
@@ -169,8 +165,8 @@ const ModalEditProduct = ({ handleEditProduct, product, showModal, close, settin
                     </div>
                   </Listbox>
                 </div>
-            
-            
+
+
               </div>
               <div className='flex flex-col w-1/2 gap-4'>
                 <div>
@@ -216,7 +212,7 @@ const ModalEditProduct = ({ handleEditProduct, product, showModal, close, settin
                       }
                     </div>
                   </div>
-            
+
                 </div>
                 <div>
                   <Label value="Categoria" />
@@ -270,15 +266,15 @@ const ModalEditProduct = ({ handleEditProduct, product, showModal, close, settin
                   </Listbox>
                 </div>
               </div>
-              
+
             </div>
             <FilePond
-                files={files}
-                onupdatefiles={setFiles}
-                allowMultiple={true}
-                maxFiles={3}
-                name="files"
-                labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+              files={files}
+              onupdatefiles={setFiles}
+              allowMultiple={true}
+              maxFiles={3}
+              name="files"
+              labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
             />
           </div>
 

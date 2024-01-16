@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/apiServices';
 import { useAuth } from '../provider/authProvider';
 import Navbar from '../components/Navbar'
@@ -7,14 +7,35 @@ import { LuShoppingCart } from "react-icons/lu";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { CiDeliveryTruck, CiCreditCard1 } from "react-icons/ci";
 import { RxSize } from "react-icons/rx";
-
+import { Tabs } from "keep-react";
+import apiServices from '../utils/apiServices';
+import { FcLike } from "react-icons/fc";
+import { Player } from '@lottiefiles/react-lottie-player';
 
 
 const Product = () => {
   const [product, setProduct] = useState(null);
+  const [otherProducts, setOtherProducts] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [comment, setComment] = useState("");
   const { id } = useParams();
   const { token } = useAuth();
+  const navigate = useNavigate();
+
+
+  const submitComment = async () => {
+    try {
+      apiServices.comments.createComment({
+        userAuthToken: token,
+        data: {
+          text: comment,
+          productId: id,
+        },
+      });
+    } catch (error) {
+      console.error("Error al crear el comentario:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -25,10 +46,30 @@ const Product = () => {
         }).request
         setProduct(response.data);
         setSelectedPhoto(response.data.imageUrls[0]);
+
+        fetchOthersProductsOfThisVendor(response.data.author.id);
       } catch (error) {
         console.error('Error al obtener los datos del producto:', error);
       }
     };
+
+    const fetchOthersProductsOfThisVendor = async (vendor) => {
+      try {
+        if (vendor) {
+          const response = await api.products.getProducts({
+            userAuthToken: token,
+            params: {
+              vendor: vendor,
+              pageSize: 8,
+              page: 1
+            },
+          }).request
+          setOtherProducts(response.data.products);
+        }
+      } catch (error) {
+        console.error('Error al obtener los datos del producto:', error);
+      }
+    }
 
     fetchProduct();
   }, [id]); // Dependencia para que se ejecute el useEffect cuando cambie el id
@@ -36,7 +77,7 @@ const Product = () => {
 
   const addCart = async (id) => {
     try {
-      const response = await api.user.cart.addToCart({
+      await api.user.cart.addToCart({
         userAuthToken: token,
         data: {
           productId: id,
@@ -49,7 +90,26 @@ const Product = () => {
     }
   }
 
-  if (!product) return <p>Cargando...</p>;
+  const addToFavorites = async (id) => {
+    await api.user.favorites.addToFavorites({
+      userAuthToken: token,
+      productId: id,
+    }).request
+  }
+
+
+  if (!product) return (
+    <div className='container flex items-center justify-center h-screen mx-auto '>
+      <div className='w-40 h-40'>
+        <Player
+          src="https://lottie.host/c347a01b-7544-489f-a889-bc6017eb6ea2/euwpGrghxm.json"
+          className="player"
+          loop
+          autoplay
+        />
+      </div>
+    </div>
+  );
 
   return (
     <div className='flex flex-col w-full'>
@@ -171,7 +231,83 @@ const Product = () => {
           </div>
         </div>
       </section >
+      <section className='container flex flex-col items-start w-full gap-10 mx-auto mb-4'>
+        <div className="w-[420px] h-8 justify-start items-start gap-5 inline-flex">
+          <div className="w-1.5 h-[30px] bg-stone-800 rounded-[10px]" />
+          <h4 className='text-xl md:text-3xl font-extralight'>Informacion</h4>
+        </div>
+        <Tabs aria-label="tabs" style="underline" borderPosition="bottom">
+          <Tabs.Item title="Description">
+            <div>
+              <span>
+                {product.description}
+              </span>
+            </div>
+          </Tabs.Item>
+          <Tabs.Item title="Comentarios">
+            <div>
+              <span>
+                {product.comments.map((comment, index) => (
+                  <div className='flex flex-col gap-2' key={index}>
+                    <div className='flex items-center gap-2'>
+                      <div className='flex flex-col'>
+                        <span className='font-bold'>{comment?.user?.name}</span>
+                        <span className='text-sm text-gray-500'>{comment?.createdAt}</span>
+                      </div>
+                    </div>
+                    <span className='text-sm'>{comment.text}</span>
+                  </div>
+                ))}
 
+              </span>
+
+              {/* Add comment */}
+              <div className='flex flex-col gap-2'>
+                <span className='font-bold'>Agrega un comentario</span>
+                <textarea className='w-full h-24 p-2 border border-gray-300 rounded-lg' onChange={(e) => setComment(e.target.value)} />
+                <button className='w-32 h-10 px-4 py-2 font-bold text-white rounded-lg bg-stone-800' onClick={submitComment}>Enviar</button>
+              </div>
+            </div>
+          </Tabs.Item>
+        </Tabs>
+      </section>
+      <section className='container flex flex-col items-start w-full gap-10 mx-auto mb-4'>
+        <div className="w-[420px] h-8 justify-start items-start gap-5 inline-flex">
+          <div className="w-1.5 h-[30px] bg-stone-800 rounded-[10px]" />
+          <h4 className='text-xl md:text-3xl font-extralight'>Productos del vendedor</h4>
+        </div>
+
+
+
+        <div className="container grid w-full grid-cols-3 gap-4 mx-auto">
+          {otherProducts?.map((p) => (
+
+            <div className=" w-[282px] h-[441px] " key={p.id}>
+              <div className="relative">
+                <img src={p.imageUrls[0]} alt="Producto 1" className="object-cover w-[282px] h-[370px] rounded-lg" />
+
+                <div className="absolute top-0 right-0 mt-4 mr-4">
+                  <div className="w-[32.36px] h-[32.36px] bg-white rounded-full flex items-center justify-center cursor-pointer" onClick={() => { addToFavorites(p.id) }}>
+                    <FcLike size={15} />
+                  </div>
+                </div>
+              </div>
+
+              <div className='flex justify-between mt-3'>
+                <div className='flex flex-col gap-2 cursor-pointer' onClick={() => navigate(`/products/${p.id}`)}>
+                  <h3 className="text-base font-semibold ">{p.title}</h3>
+                  <p className="text-sm font-medium ">{p.author.name}</p>
+                </div>
+                <div className="w-[82.31px] h-[36.58px] bg-neutral-100 rounded-lg flex items-center justify-center" >
+                  <div className="text-sm font-bold text-center text-neutral-700 font-inter">$ {p.price}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+
+      </section>
     </div >
   )
 }

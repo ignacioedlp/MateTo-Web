@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import Navbar from '../../components/Navbar'
 import MatePhoto from '../../assets/image1.png'
 import { Formik } from 'formik';
@@ -6,7 +5,7 @@ import React, { useState } from 'react';
 import * as Yup from 'yup';
 import api from '../../utils/apiServices';
 import { useNavigate } from "react-router-dom";
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 
 
 
@@ -24,7 +23,7 @@ const SignupSchema = Yup.object().shape({
   passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match')
 });
 
-const SignUp = props => {
+const SignUp = () => {
   const [isUser, setIsUser] = useState(true)
   const navigate = useNavigate();
 

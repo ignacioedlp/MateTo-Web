@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
 import Navbar from '../components/Navbar'
-import { useAxios } from 'use-axios-client';
-import { FcLike, FcDislike } from "react-icons/fc";
 import { useAuth } from '../provider/authProvider'
 import api from '../utils/apiServices';
 import { useNavigate } from 'react-router-dom'
 import { Spinner, Button } from "keep-react";
+import { Player } from '@lottiefiles/react-lottie-player';
+import CartEmpty from '../assets/cartEmpty.svg'
 
+const Cart = () => {
 
-
-const Cart = props => {
-
-  const [cart, setCart] = useState([])
+  const [cart, setCart] = useState(null)
   const [creationOrder, setCreationOrder] = useState(false)
   const { token } = useAuth()
   const navigate = useNavigate();
@@ -31,7 +28,7 @@ const Cart = props => {
   }, []);
 
   const updateCartQuantity = async (id, quantity) => {
-    const { data } = await api.user.cart.addToCart({
+    await api.user.cart.addToCart({
       userAuthToken: token,
       data: {
         productId: id,
@@ -43,7 +40,7 @@ const Cart = props => {
   }
 
   const removeCart = async (id) => {
-    const { data } = await api.user.cart.deleteFromCart({
+    await api.user.cart.deleteFromCart({
       userAuthToken: token,
       productId: id,
     }).request
@@ -78,6 +75,19 @@ const Cart = props => {
     }
 
   }
+
+  if (!cart) return (
+    <div className='container flex items-center justify-center h-screen mx-auto '>
+      <div className='w-40 h-40'>
+        <Player
+          src="https://lottie.host/c347a01b-7544-489f-a889-bc6017eb6ea2/euwpGrghxm.json"
+          className="player"
+          loop
+          autoplay
+        />
+      </div>
+    </div>
+  );
 
 
   return (
@@ -200,8 +210,17 @@ const Cart = props => {
             </div>
           </section>
         ) : (
-          <div className="container flex flex-col items-center justify-center w-full h-full mx-auto my-20">
-            <Spinner color="gray" size="lg" />;
+          <div className='flex flex-col items-center justify-center gap-4 p-64'>
+            <img src={CartEmpty} alt="Carrito vacio" className="object-cover rounded-lg" />
+            <h3 className='text-[34px] font-thin'>
+              Tu carrito esta vacio y triste :(
+            </h3>
+            <span className='text-[16px] font-thin text-[#807D7E]'>
+              Agrega algo para hacerlo feliz
+            </span>
+            <button className='px-[48px] py-[12px] font-bold text-white bg-[#292526] rounded-lg' onClick={() => navigate('/products')}>
+              <span className='font-bold text-[18px]'>Continuar comprando</span>
+            </button>
           </div>
         )
       }

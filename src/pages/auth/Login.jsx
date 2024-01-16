@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Navbar from '../../components/Navbar'
 import MatePhoto from '../../assets/image1.png'
 import { Formik } from 'formik';
@@ -13,7 +12,7 @@ const SignInSchema = Yup.object().shape({
   password: Yup.string().min(6, 'Too Short!').max(50, 'Too Long!').required('Required'),
 });
 
-const Login = props => {
+const Login = () => {
   const { setToken, setUser } = useAuth();
   return (
     <>
