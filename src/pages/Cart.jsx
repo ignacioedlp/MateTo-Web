@@ -28,6 +28,7 @@ const Cart = () => {
   }, []);
 
   const updateCartQuantity = async (id, quantity) => {
+    if(quantity < 1) return;
     await api.user.cart.addToCart({
       userAuthToken: token,
       data: {

@@ -41,19 +41,19 @@ function calculateUniqueUsers(orders) {
 const calculateStock = (stock) => {
   if (stock <= 0) {
     return (
-      <Badge color="error" rounded>
+      <Badge color="error" rounded="true">
         Agotado
       </Badge>
     );
   } else if (stock <= 50) {
     return (
-      <Badge color="warning" rounded>
+      <Badge color="warning" rounded="true">
         {stock} en stock
       </Badge>
     );
   } else {
     return (
-      <Badge color="success" rounded>
+      <Badge color="success" rounded="true">
         {stock} en stock
       </Badge>
     );
@@ -98,8 +98,6 @@ function Dashboard() {
         <SideBar page={"Home"} />
         <div className='flex flex-col w-full gap-6 px-10'>
           <div className='container flex flex-wrap justify-around mx-auto mt-10 fl'>
-
-
             <Statistic>
               <Statistic.Title>Ganancias</Statistic.Title>
               <Statistic.Amount>{totalSales}</Statistic.Amount>

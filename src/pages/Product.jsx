@@ -120,8 +120,8 @@ const Product = () => {
             <div className='flex flex-col justify-center gap-4'>
               {
                 product.imageUrls?.map((image, index) => (
-                  <div className={`w-17 h-17 rounded-xl ${selectedPhoto === image && "border-[1px] border-black"}`} onClick={() => setSelectedPhoto(image)}>
-                    <img src={image} alt="" className={`object-cover w-16 h-16 rounded-xl ${selectedPhoto === image && "border-2 border-white"}`} key={index} />
+                  <div className={`w-17 h-17 rounded-xl ${selectedPhoto === image && "border-[1px] border-black"}`} onClick={() => setSelectedPhoto(image)} key={index}>
+                    <img src={image} alt="" className={`object-cover w-16 h-16 rounded-xl ${selectedPhoto === image && "border-2 border-white"}`} />
                   </div>
                 ))
               }

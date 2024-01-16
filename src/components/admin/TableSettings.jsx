@@ -65,8 +65,8 @@ const TableSettings = ({ settings, headers, customColumn = null, title, settingN
         </Table.Caption>
         <Table.Head>
           {
-            headers.map(header => (
-              <Table.HeadCell className="min-w-[150px]">
+            headers.map((header, index) => (
+              <Table.HeadCell className="min-w-[150px]" key={index}>
                 <p className="font-medium uppercase text-body-6 text-metal-400">{header}</p>
               </Table.HeadCell>
             ))
