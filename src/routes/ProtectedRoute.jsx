@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
-import { decodeToken, verifyToken } from "../utils/jwt";
+import { decodeToken } from "../utils/jwt";
 import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import ErrorState from '../components/ErrorState'

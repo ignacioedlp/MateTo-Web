@@ -2,3 +2,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.slick-prev,
+.slick-next {
+  color: black; /* Cambia el color según tu preferencia */
+  z-index: 1; /* Asegúrate de que estén por encima de otros elementos */
+}
+
+/* Ajustes para cuando se pasa por encima */
+.slick-prev:hover,
+.slick-next:hover {
+  color: blue; /* Cambia el color para el hover */
+}

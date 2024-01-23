@@ -8,20 +8,26 @@ import SignUp from "../pages/auth/SignUp";
 
 // Vendor pages
 import VendorDashboard from "../pages/vendor/Dashboard";
+import Orders from "../pages/vendor/Orders";
+import VendorProducts from "../pages/vendor/Products";
 
 // Admin pages
 import AdminDashboard from "../pages/admin/Dashboard";
 import Settings from "../pages/admin/Settings";
+import Vendors from "../pages/admin/Vendors";
+import Users from "../pages/admin/Users";
 
 // Public pages
 import Welcome from "../pages/Welcome";
-import Home from "../pages/Home";
 
 // User pages
-import Profile from "../pages/Profile";
+import Home from "../pages/Home";
+import Profile from "../pages/profile/Profile";
+import Purchases from "../pages/profile/Purchases";
 import Products from "../pages/Products";
 import Cart from "../pages/Cart";
 import Favorite from "../pages/Favorite";
+import Product from "../pages/Product";
 
 
 const Routes = () => {
@@ -44,6 +50,10 @@ const Routes = () => {
           element: <Products />,
         },
         {
+          path: "/products/:id",
+          element: <Product />,
+        },
+        {
           path: "/cart",
           element: <Cart />,
         },
@@ -51,6 +61,10 @@ const Routes = () => {
           path: "/favorite",
           element: <Favorite />,
         },
+        {
+          path: "/purchases",
+          element: <Purchases />,
+        }
       ],
     },
   ];
@@ -61,9 +75,18 @@ const Routes = () => {
       element: <ProtectedRoute roles={["VENDOR"]} />,
       children: [
         {
-          path: "/vendor/dashboard",
+          path: "/vendor",
           element: <VendorDashboard />,
         },
+        {
+          path: "/vendor/products",
+          element: <VendorProducts />,
+        },
+        {
+          path: "/vendor/orders/",
+          element: <Orders />
+        },
+
       ],
     },
   ];
@@ -74,13 +97,21 @@ const Routes = () => {
       element: <ProtectedRoute roles={["ADMIN"]} />,
       children: [
         {
-          path: "/admin/dashboard",
+          path: "/admin",
           element: <AdminDashboard />,
         },
         {
           path: "/admin/settings",
           element: <Settings />,
         },
+        {
+          path: "/admin/customers",
+          element: <Vendors />,
+        },
+        {
+          path: "/admin/users",
+          element: <Users />,
+        }
       ],
     },
   ];
@@ -90,10 +121,6 @@ const Routes = () => {
       path: "/",
       element: <PublicRoute />,
       children: [
-        {
-          path: "/",
-          element: <Welcome />,
-        },
         {
           path: "/login",
           element: <Login />,
@@ -106,9 +133,22 @@ const Routes = () => {
     }
   ];
 
+  const allPublicRoutes = [
+    {
+      path: "/",
+      children: [
+        {
+          path: "/",
+          element: <Welcome />,
+        },
+      ]
+    }
+  ];
+
 
 
   const router = createBrowserRouter([
+    ...allPublicRoutes,
     ...publicRoutes,
     ...adminRoutes,
     ...vendorRoutes,

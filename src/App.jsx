@@ -1,12 +1,15 @@
 import AuthProvider from "./provider/authProvider.jsx";
-import Routes from "./routes";
-import { Toaster } from 'sonner'
+import SettingsProvider from "./provider/settingsProvider.jsx";
+import Routes from "./routes/index.jsx";
+import { Toaster } from "sonner";
 
 function App() {
   return (
     <AuthProvider>
-      <Toaster />
-      <Routes />
+      <SettingsProvider>
+        <Toaster />
+        <Routes />
+      </SettingsProvider>
     </AuthProvider>
   );
 }

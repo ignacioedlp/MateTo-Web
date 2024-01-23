@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from "../provider/authProvider";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import MatetoSvg from '../assets/mateto.svg'
 import { LuUser2 } from "react-icons/lu";
 import { FiShoppingCart } from "react-icons/fi";
@@ -13,17 +12,7 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
-  const { setToken, token, user, setUser } = useAuth();
-
-
-  const handleLogout = () => {
-    delete axios.defaults.headers.common["Authorization"];
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    setToken(null);
-    setUser(null);
-    navigate('/login');
-  }
+  const { token, role } = useAuth();
 
   return (
     <nav className="relative shadow ">
@@ -53,44 +42,40 @@ function Navbar() {
             {
               token ? (
                 <>
-                  <a href="/home" className="px-2 py-1 text-md font-medium  transition-colors duration-200 transform rounded-md ">
+                  <a href="/home" className="px-2 py-1 font-medium transition-colors duration-200 transform rounded-md text-md ">
                     Home
                   </a>
-                  <a href="/products" className="px-2 py-1 text-md font-medium  transition-colors duration-200 transform rounded-md">
+                  <a href="/products" className="px-2 py-1 font-medium transition-colors duration-200 transform rounded-md text-md">
                     Products
                   </a>
+                  {
+                    role === 'ADMIN' || role === 'VENDOR' ? (
+                      <a href={`/${role === 'ADMIN' ? 'admin' : 'vendor'
+                        }`} className="px-2 py-1 font-medium transition-colors duration-200 transform rounded-md text-md">
+                        Mi panel
+                      </a>
+                    ) : null
+                  }
                 </>
 
               ) : null}
           </div>
 
-          {
-            token ? (
-              <div className="relative mt-4 md:mt-0">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <svg className="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                  </svg>
-                </span>
-
-                <input type="text" className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-lg  dark:text-gray-300 dark:border-gray-600 focus:outline-none focus:ring focus:ring-opacity-40 " placeholder="Search" />
-              </div>
-            ) : null}
-
           <div className="flex items-center mt-4 md:mt-0">
             {
               token ? (
-                <div className='flex flex-row gap-4'>
-                  <a className='cursor-pointer' href='/cart'>
-                    <FiShoppingCart size={24} />
-                  </a>
-                  <a className='cursor-pointer' href='/favorite'>
-                    <MdOutlineFavoriteBorder size={24} />
-                  </a>
-                  <a className='cursor-pointer' href='/profile'>
-                    <LuUser2 size={24} />
-                  </a>
+                <div className="w-[156px] h-11 justify-start items-start gap-3 inline-flex">
+                  <div className="flex items-center justify-center gap-3 p-3 rounded-lg bg-neutral-100">
+                    <div className="relative w-5 h-5" ><a href="/cart"><FiShoppingCart size={20} color='#807D7E' /></a></div>
+                  </div>
+                  <div className="flex items-center justify-center gap-3 p-3 rounded-lg bg-neutral-100">
+                    <div className="relative w-5 h-5" ><a href="/favorite"><MdOutlineFavoriteBorder size={20} color='#807D7E' /></a></div>
+                  </div>
+                  <div className="flex items-center justify-center gap-3 p-3 rounded-lg bg-neutral-100">
+                    <div className="relative w-5 h-5" > <a href="/profile"><LuUser2 size={20} color='#807D7E' /></a></div>
+                  </div>
                 </div>
+
 
               ) : (
                 <>
@@ -98,7 +83,7 @@ function Navbar() {
                     Login
                   </button>
 
-                  <button onClick={() => navigate('/signup')} className="px-4 py-2 mx-2 text-sm font-medium tracking-wide text-black capitalize transition-colors duration-200 transform bg-white rounded-md border-2 border-black">
+                  <button onClick={() => navigate('/signup')} className="px-4 py-2 mx-2 text-sm font-medium tracking-wide text-black capitalize transition-colors duration-200 transform bg-white border-2 border-black rounded-md">
                     Sign Up
                   </button>
                 </>

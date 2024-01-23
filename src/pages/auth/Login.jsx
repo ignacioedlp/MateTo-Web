@@ -1,11 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Navbar from '../../components/Navbar'
 import MatePhoto from '../../assets/image1.png'
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from '../../provider/authProvider';
-import axiosInstance from '../../utils/apiServices';
+import api from '../../utils/apiServices';
 import { toast } from 'sonner';
 
 const SignInSchema = Yup.object().shape({
@@ -13,7 +12,7 @@ const SignInSchema = Yup.object().shape({
   password: Yup.string().min(6, 'Too Short!').max(50, 'Too Long!').required('Required'),
 });
 
-const Login = props => {
+const Login = () => {
   const { setToken, setUser } = useAuth();
   return (
     <>
@@ -26,7 +25,7 @@ const Login = props => {
 
           <div className="flex items-center w-full max-w-3xl p-8 mx-auto lg:px-12 lg:w-3/5">
             <div className="w-full">
-              <h1 className="text-2xl font-semibold tracking-wider  capitalize ">
+              <h1 className="text-2xl font-semibold tracking-wider capitalize ">
                 Iniciar sesion
               </h1>
 
@@ -42,18 +41,13 @@ const Login = props => {
                 validationSchema={SignInSchema}
                 onSubmit={async (values, actions) => {
                   try {
-                    const response = await axiosInstance.post(
-                      '/auth/signin',
-                      JSON.stringify({
+                    const response = await api.auth.login({
+                      data: {
                         email: values.email,
                         password: values.password,
-                      }),
-                      {
-                        headers: {
-                          'Content-Type': 'application/json'
-                        }
                       }
-                    );
+                    }
+                    ).request
                     toast.success('Sesion iniciada correctamente 🚀 ');
 
                     setToken(response.data.token);
@@ -85,7 +79,7 @@ const Login = props => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values.email}
-                        className='block w-full px-5 py-3   border border-gray-200 rounded-lg  focus:outline-none focus:ring focus:ring-opacity-40'
+                        className='block w-full px-5 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring focus:ring-opacity-40'
                       />
                     </div>
                     {errors.email && touched.email && errors.email}
@@ -97,7 +91,7 @@ const Login = props => {
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values.password}
-                        className='block w-full px-5 py-3 mt-2 border  focus:outline-none focus:ring focus:ring-opacity-40'
+                        className='block w-full px-5 py-3 mt-2 border focus:outline-none focus:ring focus:ring-opacity-40'
                       />
                     </div>
                     {errors.password && touched.password && errors.password}
