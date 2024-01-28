@@ -107,6 +107,15 @@ export default {
         },
         data,
       }),
+    verifyEmail: ({ data }) =>
+      requestBuilder({
+        method: "POST",
+        url: "/auth/verify-email",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data,
+      }),
   },
   products: {
     getProducts: ({ userAuthToken, params }) =>
@@ -435,5 +444,5 @@ export default {
         url: "/analytics",
         userAuthToken,
       }),
-  }, 
+  },
 }
