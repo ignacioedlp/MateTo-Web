@@ -15,7 +15,7 @@ function Navbar() {
   const { token, role } = useAuth();
 
   return (
-    <nav className="relative shadow ">
+    <nav className="relative shadow">
       <div className="container px-6 py-8 mx-auto md:flex">
         <div className="flex items-center justify-between">
           <a href="/">

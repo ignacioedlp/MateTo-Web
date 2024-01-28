@@ -115,9 +115,9 @@ const Product = () => {
     <div className='flex flex-col w-full'>
       <Navbar />
       <section className="container mx-auto overflow-hidden text-gray-600 body-font ">
-        <div className="px-5 py-24 ">
-          <div className="flex justify-center w-full gap-4">
-            <div className='flex flex-col justify-center gap-4'>
+        <div className="px-5 py-10 lg:py-24">
+          <div className="flex flex-col justify-center w-full gap-4 lg:flex-row ">
+          <div className='flex-col justify-center hidden gap-4 lg:flex'>
               {
                 product.imageUrls?.map((image, index) => (
                   <div className={`w-17 h-17 rounded-xl ${selectedPhoto === image && "border-[1px] border-black"}`} onClick={() => setSelectedPhoto(image)} key={index}>
@@ -126,11 +126,22 @@ const Product = () => {
                 ))
               }
             </div>
+            <h2 className="block text-sm tracking-widest text-gray-500 title-font lg:hidden">{product.author.name}</h2>
+            <h1 className="block mb-1 text-3xl font-medium text-gray-900 title-font lg:hidden">{product.title}</h1>
             <img alt="ecommerce" className="lg:w-[520px] w-full lg:h-[785px] h-[785px] object-fill object-center" src={selectedPhoto} />
+            <div className='flex flex-col justify-center gap-4 w-max lg:hidden'>
+              {
+                product.imageUrls?.map((image, index) => (
+                  <div className={`w-17 h-17 rounded-xl ${selectedPhoto === image && "border-[1px] border-black"}`} onClick={() => setSelectedPhoto(image)} key={index}>
+                    <img src={image} alt="" className={`object-cover w-16 h-16 rounded-xl ${selectedPhoto === image && "border-2 border-white"}`} />
+                  </div>
+                ))
+              }
+            </div>
 
             <div className="lg:w-[534px] w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-              <h2 className="text-sm tracking-widest text-gray-500 title-font">{product.author.name}</h2>
-              <h1 className="mb-1 text-3xl font-medium text-gray-900 title-font">{product.title}</h1>
+              <h2 className="hidden text-sm tracking-widest text-gray-500 title-font lg:block">{product.author.name}</h2>
+              <h1 className="hidden mb-1 text-3xl font-medium text-gray-900 title-font lg:block">{product.title}</h1>
               <div className="flex mb-4">
                 <span className="flex items-center">
                   <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-amber-300" viewBox="0 0 24 24">
@@ -231,7 +242,7 @@ const Product = () => {
           </div>
         </div>
       </section >
-      <section className='container flex flex-col items-start w-full gap-10 mx-auto mb-4'>
+      <section className='container flex flex-col items-start w-full gap-10 px-4 mx-auto mb-4 lg:px-0'>
         <div className="w-[420px] h-8 justify-start items-start gap-5 inline-flex">
           <div className="w-1.5 h-[30px] bg-stone-800 rounded-[10px]" />
           <h4 className='text-xl md:text-3xl font-extralight'>Informacion</h4>
@@ -271,7 +282,7 @@ const Product = () => {
           </Tabs.Item>
         </Tabs>
       </section>
-      <section className='container flex flex-col items-start w-full gap-10 mx-auto mb-4'>
+      <section className='container flex flex-col items-start w-full gap-10 px-4 mx-auto mb-4 lg:px-0'>
         <div className="w-[420px] h-8 justify-start items-start gap-5 inline-flex">
           <div className="w-1.5 h-[30px] bg-stone-800 rounded-[10px]" />
           <h4 className='text-xl md:text-3xl font-extralight'>Productos del vendedor</h4>
@@ -279,12 +290,12 @@ const Product = () => {
 
 
 
-        <div className="container grid w-full grid-cols-3 gap-4 mx-auto">
+        <div className="container grid w-full grid-cols-1 p-4 mx-auto space-y-8 lg:grid-cols-3 lg:space-y-0">
           {otherProducts?.map((p) => (
 
-            <div className=" w-[282px] h-[441px] " key={p.id}>
+            <div className="w-full lg:w-[282px] h-full " key={p.id}>
               <div className="relative">
-                <img src={p.imageUrls[0]} alt="Producto 1" className="object-cover w-[282px] h-[370px] rounded-lg" />
+                <img src={p.imageUrls[0]} alt="Producto 1" className="object-cover w-full lg:w-[282px] h-[370px] rounded-lg" />
 
                 <div className="absolute top-0 right-0 mt-4 mr-4">
                   <div className="w-[32.36px] h-[32.36px] bg-white rounded-full flex items-center justify-center cursor-pointer" onClick={() => { addToFavorites(p.id) }}>

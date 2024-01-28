@@ -20,7 +20,7 @@ const SideBar = ({ page }) => {
   }
 
   return (
-    <div className="flex flex-col justify-between w-16 h-screen bg-white border-e">
+    <div className="flex flex-col justify-between w-16 h-screen bg-white border-e sticky">
       <div>
         <div className="inline-flex items-center justify-center w-16 h-16">
           <span
