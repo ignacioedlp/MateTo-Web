@@ -20,12 +20,29 @@ const SignupSchema = Yup.object().shape({
     .required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string().min(6, 'Too Short!').max(50, 'Too Long!').required('Required'),
-  passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match')
+  passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
+  otp: Yup.string().required('Required').min(6, 'Too Short!').max(6, 'Too Long!'),
 });
 
 const SignUp = () => {
   const [isUser, setIsUser] = useState(true)
   const navigate = useNavigate();
+
+  const sendEmailVerify = async (email) => {
+    try {
+
+
+      await api.auth.verifyEmail({
+        data: {
+          email: email
+        }
+      });
+
+      toast.success('Email enviado');
+    } catch (error) {
+      toast.error('Error al enviar el email');
+    }
+  }
 
   return (
     <>
@@ -78,7 +95,8 @@ const SignUp = () => {
                   username: '',
                   email: '',
                   password: '',
-                  passwordConfirmation: ''
+                  passwordConfirmation: '',
+                  otp: '',
                 }}
                 validationSchema={SignupSchema}
                 onSubmit={async (values, actions) => {
@@ -90,7 +108,8 @@ const SignUp = () => {
                         email: values.email,
                         password: values.password,
                         passwordConfirmation: values.passwordConfirmation,
-                        isUser: isUser
+                        isUser: isUser,
+                        otp: values.otp,
                       }
                     });
                     toast.success('Cuenta creada exitosamente');
@@ -130,14 +149,22 @@ const SignUp = () => {
 
                     <div className='flex flex-col gap-2'>
                       <label className="block mb-2 text-sm ">Email</label>
-                      <input
-                        type="email"
-                        name="email"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.email}
-                        className='block w-full px-5 py-3 bg-white border focus:outline-none focus:ring focus:ring-opacity-40'
-                      />
+                      <div className='flex'>
+
+                        <input
+                          type="email"
+                          name="email"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.email}
+                          className='block w-full px-5 py-3 bg-white border focus:outline-none focus:ring focus:ring-opacity-40'
+                        />
+                        <button className={"text-white bg-black flex justify-center w-full px-6 py-3 rounded-lg md:w-auto md:mx-2 focus:outline-none"} onClick={() => sendEmailVerify(values.email)} type='button'>
+                          <span className="mx-2">
+                            Verificar
+                          </span>
+                        </button>
+                      </div>
                     </div>
                     {errors.email && touched.email && errors.email}
                     <div className='flex flex-col gap-2'>
@@ -178,6 +205,19 @@ const SignUp = () => {
                       />
                     </div>
                     {errors.passwordConfirmation && touched.passwordConfirmation && errors.passwordConfirmation}
+
+                    <div className='flex flex-col gap-2'>
+                      <label className="block mb-2 text-sm ">Codigo de verificacion</label>
+                      <input
+                        type="string"
+                        name="otp"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.otp}
+                        className='block w-full px-5 py-3 mt-2 focus:outline-none focus:ring focus:ring-opacity-40'
+                      />
+                    </div>
+                    {errors.otp && touched.otp && errors.otp}
 
                     <div className="flex items-center space-x-2">
                       <input type="checkbox" className="w-4 h-4 rounded " />
