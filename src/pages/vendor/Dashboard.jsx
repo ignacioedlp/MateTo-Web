@@ -92,119 +92,121 @@ function Dashboard() {
   }, [])
 
   return (
-    <div className='flex flex-col gap-2'>
+    <>
       <Navbar />
-      <div className='flex '>
-        <SideBar page={"Home"} />
-        <div className='flex flex-col w-full gap-6 px-10'>
-          <div className='container flex flex-wrap justify-around mx-auto mt-10 fl'>
-            <Statistic>
-              <Statistic.Title>Ganancias</Statistic.Title>
-              <Statistic.Amount>{totalSales}</Statistic.Amount>
-            </Statistic>
-            <Statistic>
-              <Statistic.Title>Vendidos</Statistic.Title>
-              <Statistic.Amount>{totalQuantity}</Statistic.Amount>
-            </Statistic>
-            <Statistic>
-              <Statistic.Title>Usuarios alcanzados</Statistic.Title>
-              <Statistic.Amount>{totalUsers}</Statistic.Amount>
-            </Statistic>
-          </div>
-          <div className='flex flex-col gap-8'>
-            {chartData &&
-              <div className='flex flex-col gap-4'>
-                <h4 className="text-body-1 font-semibold text-metal-600">Ultimos 7 dias (ganacias)</h4>
-                <AreaChart
-                  chartData={chartData}
-                  dataKey="total"
-                  showTooltip={true}
-                  showXaxis={true}
-                  showYaxis={true}
-                  showGridLine={true}
-                  XAxisDataKey='day'
-                  chartType='linear'
-                />
-              </div>
-            }
-            {chartData &&
-              <div className='flex flex-col gap-4'>
-                <h4 className="text-body-1 font-semibold text-metal-600">Ultimos 7 dias (articulos vendidos)</h4>
-                <AreaChart
-                  chartData={chartData}
-                  dataKey="quantity"
-                  showTooltip={true}
-                  showXaxis={true}
-                  showYaxis={true}
-                  showGridLine={true}
-                  XAxisDataKey='day'
-                  chartType='linear'
-                />
-              </div>
-            }
-          </div>
-
-          <div>
-            <Table showCheckbox={true}>
-              <Table.Caption>
-                <div className="my-5 flex items-center justify-between">
-                  <div className="flex items-center gap-5">
-                    <p className="text-body-1 font-semibold text-metal-600"> Top 5 productos</p>
-                  </div>
+      <div className='flex flex-col gap-2'>
+        <div className='flex '>
+          <SideBar page={"Home"} />
+          <div className='flex flex-col w-full gap-6 px-10'>
+            <div className='container flex flex-col justify-around gap-4 mx-auto mt-10 lg:flex-row'>
+              <Statistic>
+                <Statistic.Title>Ganancias</Statistic.Title>
+                <Statistic.Amount>{totalSales}</Statistic.Amount>
+              </Statistic>
+              <Statistic>
+                <Statistic.Title>Vendidos</Statistic.Title>
+                <Statistic.Amount>{totalQuantity}</Statistic.Amount>
+              </Statistic>
+              <Statistic>
+                <Statistic.Title>Usuarios alcanzados</Statistic.Title>
+                <Statistic.Amount>{totalUsers}</Statistic.Amount>
+              </Statistic>
+            </div>
+            <div className='flex flex-col gap-8'>
+              {chartData &&
+                <div className='flex flex-col gap-4'>
+                  <h4 className="font-semibold text-body-1 text-metal-600">Ultimos 7 dias (ganacias)</h4>
+                  <AreaChart
+                    chartData={chartData}
+                    dataKey="total"
+                    showTooltip={true}
+                    showXaxis={true}
+                    showYaxis={true}
+                    showGridLine={true}
+                    XAxisDataKey='day'
+                    chartType='linear'
+                  />
                 </div>
-              </Table.Caption>
-              <Table.Head>
-                <Table.HeadCell>Nombre</Table.HeadCell>
-                <Table.HeadCell className="min-w-[152px]">U. vendidas</Table.HeadCell>
-                <Table.HeadCell className="min-w-[240px]">Ganacias</Table.HeadCell>
-                <Table.HeadCell className="min-w-[240px]">Stock</Table.HeadCell>
-              </Table.Head>
-              <Table.Body className="divide-gray-25 divide-y">
-                {
-                  topProducts?.map((product, index) => (
-                    <Table.Row key={index}>
+              }
+              {chartData &&
+                <div className='flex flex-col gap-4'>
+                  <h4 className="font-semibold text-body-1 text-metal-600">Ultimos 7 dias (articulos vendidos)</h4>
+                  <AreaChart
+                    chartData={chartData}
+                    dataKey="quantity"
+                    showTooltip={true}
+                    showXaxis={true}
+                    showYaxis={true}
+                    showGridLine={true}
+                    XAxisDataKey='day'
+                    chartType='linear'
+                  />
+                </div>
+              }
+            </div>
 
-                      <Table.Cell>
-                        <div className="flex items-center gap-5">
-                          <div className="flex flex-col">
-                            <p className="text-body-6 font-medium text-metal-600">
-                              {product?.product?.title}
-                            </p>
-                          </div>
-                        </div>
-                      </Table.Cell>
-                      <Table.Cell className="min-w-[152px]">
-                        <div className="flex items-center gap-5">
-                          <div className="flex flex-col">
-                            <p className="text-body-6 font-medium text-metal-600">
-                              {product?.quantity}
-                            </p>
-                          </div>
-                        </div>
-                      </Table.Cell>
-                      <Table.Cell className="min-w-[240px]">
-                        <div className="flex items-center gap-5">
-                          <div className="flex flex-col">
-                            <p className="text-body-6 font-medium text-metal-600">
-                              {product.total}
-                            </p>
-                          </div>
-                        </div>
-                      </Table.Cell>
-                      <Table.Cell>
-                        {calculateStock(product?.product.stock)}
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
+            {/* <div className='w-full'>
+              <Table showCheckbox={true}>
+                <Table.Caption>
+                  <div className="flex items-center justify-between my-5">
+                    <div className="flex items-center gap-5">
+                      <p className="font-semibold text-body-1 text-metal-600"> Top 5 productos</p>
+                    </div>
+                  </div>
+                </Table.Caption>
+                <Table.Head>
+                  <Table.HeadCell>Nombre</Table.HeadCell>
+                  <Table.HeadCell className="min-w-[152px]">U. vendidas</Table.HeadCell>
+                  <Table.HeadCell className="min-w-[240px]">Ganacias</Table.HeadCell>
+                  <Table.HeadCell className="min-w-[240px]">Stock</Table.HeadCell>
+                </Table.Head>
+                <Table.Body className="divide-y divide-gray-25">
+                  {
+                    topProducts?.map((product, index) => (
+                      <Table.Row key={index}>
 
-                }
-              </Table.Body>
-            </Table>
+                        <Table.Cell>
+                          <div className="flex items-center gap-5">
+                            <div className="flex flex-col">
+                              <p className="font-medium text-body-6 text-metal-600">
+                                {product?.product?.title}
+                              </p>
+                            </div>
+                          </div>
+                        </Table.Cell>
+                        <Table.Cell className="min-w-[152px]">
+                          <div className="flex items-center gap-5">
+                            <div className="flex flex-col">
+                              <p className="font-medium text-body-6 text-metal-600">
+                                {product?.quantity}
+                              </p>
+                            </div>
+                          </div>
+                        </Table.Cell>
+                        <Table.Cell className="min-w-[240px]">
+                          <div className="flex items-center gap-5">
+                            <div className="flex flex-col">
+                              <p className="font-medium text-body-6 text-metal-600">
+                                {product.total}
+                              </p>
+                            </div>
+                          </div>
+                        </Table.Cell>
+                        <Table.Cell>
+                          {calculateStock(product?.product.stock)}
+                        </Table.Cell>
+                      </Table.Row>
+                    ))
+
+                  }
+                </Table.Body>
+              </Table>
+            </div> */}
           </div>
         </div>
-      </div>
 
-    </div>
+      </div>
+    </>
   )
 }
 

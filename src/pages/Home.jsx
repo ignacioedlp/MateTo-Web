@@ -52,10 +52,10 @@ const Home = () => {
     //Los textos deben estar sobre la imagen
     return (
       <div className="flex flex-col items-center justify-center w-full h-full bg-center bg-no-repeat bg-cover rounded-2xl" style={{ backgroundImage: `url(${item.imageUrls[0]})` }}>
-        <div className="flex flex-col items-start justify-center w-full h-full px-20 bg-black bg-opacity-50 rounded-2xl">
-          <h1 className=" text-white text-[78px] font-thin  leading-[93.62px] tracking-tight">{item.title}</h1>
-          <div className="w-[250px] h-[45px] px-[50px] py-4 bg-white rounded-lg justify-center items-center gap-3 inline-flex">
-            <div className="text-xl font-bold text-center text-neutral-700 font-inter">Compra ahora</div>
+        <div className="flex flex-col items-center justify-start w-full h-full px-20 bg-black bg-opacity-50 lg:justify-center lg:items-start rounded-2xl">
+          <h1 className=" text-white text-2xl lg:text-[78px] font-thin  leading-[93.62px] tracking-tight">{item.title}</h1>
+          <div className="lg:w-[250px] h-[45px] lg:px-[50px] w-[130px] py-4 bg-white rounded-lg justify-center items-center gap-3 inline-flex">
+            <div className="font-bold text-center text-md lg:text-xl text-neutral-700 font-inter">Compra ahora</div>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@ const Home = () => {
     return (
       <div className="flex flex-col items-center justify-center w-full bg-center bg-no-repeat bg-cover h-96 rounded-2xl" style={{ backgroundImage: `url(${item.imageUrls[0]})` }}>
         <div className="flex flex-col items-start justify-between w-full h-full px-10 py-20 bg-black bg-opacity-50 rounded-2xl">
-          <h1 className="text-3xl font-bold text-white">{title}</h1>
+          <h1 className="text-2xl font-bold text-white lg:text-3xl">{title}</h1>
           <h4 className='font-thin text-white underline'>Explorar productos</h4>
         </div>
       </div>
@@ -77,9 +77,9 @@ const Home = () => {
   const CardNew = ({ item }) => {
     //Los textos deben estar sobre la imagen
     return (
-      <div className="flex flex-col items-center justify-center bg-center bg-no-repeat bg-cover h-72 w-72 rounded-xl" style={{ backgroundImage: `url(${item.imageUrls[0]})` }}>
+      <div className="flex flex-col items-center justify-center w-full bg-center bg-no-repeat bg-cover h-72 lg:w-72 rounded-xl" style={{ backgroundImage: `url(${item.imageUrls[0]})` }}>
         <div className="flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-50 rounded-xl">
-          <h1 className="text-xl font-bold text-white">{item.title}</h1>
+          <h1 className="text-xl font-bold text-white lg:text-xl">{item.title}</h1>
           <button className="px-4 py-2 mt-4 font-thin text-white underline ">Comprar</button>
         </div>
       </div>
@@ -91,7 +91,7 @@ const Home = () => {
   return (
     <div className='px-5 mx-auto md:px-0'>
       <Navbar />
-      <div className='container mx-auto my-16'>
+      <div className='container mx-auto my-16 '>
         {products?.length > 0 ? (
           <Carousel slide={true} indicatorsType="ring" indicators={true}>
             {products.slice(0, 4).map((item, index) => {
@@ -157,11 +157,11 @@ const Home = () => {
         <div className="grid gap-8 mt-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {
             vendors?.length > 0 ?
-              vendors?.map((item, index) => {
+              vendors?.slice(0, 4).map((item, index) => {
                 return (
                   <div key={index} className="flex flex-col items-center justify-center w-full h-full ">
                     <div className="flex flex-col items-start justify-center w-full h-full">
-                      <img className="object-cover object-center w-full h-48 mx-auto rounded-lg" src={item?.imageProfile} alt="avatar" />
+                      <img className="object-cover object-center w-full h-48 mx-auto rounded-lg" src={item?.imageProfile || "https://images.pexels.com/photos/927022/pexels-photo-927022.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=3&amp;h=750&amp;w=1260"} alt="avatar" />
 
                       <div className="mt-4">
                         <h1 className="text-xl font-semibold text-gray-800">{item?.username}</h1>

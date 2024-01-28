@@ -8,7 +8,7 @@ const Welcome = () => {
   return (
     <>
       <NavBar />
-      <div className="flex flex-col justify-between max-w-xl px-4 mx-auto lg:pt-16 lg:flex-row md:px-8 lg:max-w-screen-xl mb-32 mt-20">
+      <div className="flex flex-col justify-between max-w-xl px-4 mx-auto mt-20 mb-32 lg:pt-16 lg:flex-row md:px-8 lg:max-w-screen-xl">
         <div className="max-w-xl mx-auto lg:max-w-screen-xl">
           <div className="mb-16 lg:max-w-lg lg:mb-0">
             <div className="max-w-xl mb-6">
@@ -54,11 +54,11 @@ const Welcome = () => {
         />
 
       </div>
-      <div className="flex flex-col justify-between max-w-xl px-4 mx-auto lg:pt-16 lg:flex-row md:px-8 lg:max-w-screen-xl my-32">
+      <div className="flex flex-col justify-between max-w-xl px-4 mx-auto my-32 lg:pt-16 lg:flex-row md:px-8 lg:max-w-screen-xl">
         <div>
           <img
             src={WelcomePhone}
-            className="object-cover object-top w-full h-64 mx-auto lg:h-auto xl:mr-24 md:max-w-sm md:flex hidden"
+            className="hidden object-cover object-top w-full h-64 mx-auto lg:h-auto xl:mr-24 md:max-w-sm md:flex"
             alt=""
           />
         </div>
@@ -90,12 +90,12 @@ const Welcome = () => {
         <div>
           <img
             src={WelcomePhone}
-            className="object-cover object-top w-full h-64 mx-auto lg:h-auto xl:mr-24 md:max-w-sm md:hidden flex"
+            className="flex object-cover object-top w-full mx-auto lg:h-auto xl:mr-24 md:max-w-sm md:hidden"
             alt=""
           />
         </div>
       </div>
-      <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20 my-32">
+      <div className="px-4 py-16 mx-auto my-32 sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
         <div className="grid gap-5 row-gap-10 lg:grid-cols-2">
           <div className="flex flex-col justify-center">
             <div className="max-w-xl mb-6">
@@ -241,7 +241,7 @@ const Welcome = () => {
           </div>
         </div>
       </div>
-      <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20 my-32">
+      <div className="px-4 py-16 mx-auto my-32 sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
         <div className="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
           <div>
             <p className="inline-block px-3 py-px mb-4 text-xs font-semibold tracking-wider text-teal-900 uppercase rounded-full bg-teal-accent-400">
@@ -395,7 +395,7 @@ const Welcome = () => {
           </div>
         </div>
       </div>
-      <div className="px-4 pt-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 mt-32">
+      <div className="px-4 pt-16 mx-auto mt-32 sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
         <div className="grid gap-10 row-gap-6 mb-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2">
             <a
