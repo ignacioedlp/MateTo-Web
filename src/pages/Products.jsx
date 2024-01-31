@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import api from '../utils/apiServices';
 import { Skeleton } from "keep-react";
-import { FcLike } from "react-icons/fc";
+import { FcLike, FcDislike  } from "react-icons/fc";
 import { LuSettings2 } from "react-icons/lu";
 import { IoIosArrowForward, IoIosArrowDown, IoIosClose } from "react-icons/io";
 import { useSettings } from '../provider/settingsProvider';
@@ -97,6 +97,17 @@ const Products = () => {
       userAuthToken: token,
       productId: id,
     }).request
+
+    fetchData()
+  }
+
+  const removeToFavorites = async (id) => {
+    await api.user.favorites.deleteFromFavorites({
+      userAuthToken: token,
+      productId: id,
+    }).request
+
+    fetchData()
   }
 
   const fetchData = async (sections) => {
@@ -393,9 +404,14 @@ const Products = () => {
                         <img src={p.imageUrls[0]} alt="Producto 1" className="object-cover w-full min-h-[441px] rounded-lg" />
 
                         <div className="absolute top-0 right-0 mt-4 mr-4">
-                          <div className="w-[32.36px] h-[32.36px] bg-white rounded-full flex items-center justify-center cursor-pointer" onClick={() => { addToFavorites(p.id) }}>
-                            <FcLike size={15} />
-                          </div>
+                          {p.favorited ?
+                            <div className="w-[32.36px] h-[32.36px] bg-white rounded-full flex items-center justify-center cursor-pointer" onClick={() => { removeToFavorites(p.id) }}>
+                              <FcLike size={15} />
+                            </div>
+                            : <div className="w-[32.36px] h-[32.36px] bg-white rounded-full flex items-center justify-center cursor-pointer" onClick={() => { addToFavorites(p.id) }}>
+                              <FcDislike size={15} />
+                            </div>
+                          }
                         </div>
                       </div>
 
