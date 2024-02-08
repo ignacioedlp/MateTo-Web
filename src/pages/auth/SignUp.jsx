@@ -77,7 +77,7 @@ const SignUp = () => {
                     </span>
                   </button>
 
-                  <button className={isUser ? "border-2 border-black text-black bg-white flex justify-center w-full px-6 py-3 rounded-lg md:w-auto md:mx-2 focus:outline-none" : "text-white bg-black flex justify-center w-full px-6 py-3 rounded-lg md:w-auto md:mx-2 focus:outline-none"} onClick={() => setIsUser(false)}>
+                  <button button className={isUser ? "border-2 border-black text-black bg-white flex justify-center w-full px-6 py-3 rounded-lg md:w-auto md:mx-2 focus:outline-none" : "text-white bg-black flex justify-center w-full px-6 py-3 rounded-lg md:w-auto md:mx-2 focus:outline-none"} onClick={() => setIsUser(false)} disabled={import.meta.env.VITE_JWT_VENDOR_ENABLED === 'false'}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
@@ -239,7 +239,7 @@ const SignUp = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
   )
 }

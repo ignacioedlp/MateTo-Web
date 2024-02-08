@@ -28,6 +28,7 @@ import Products from "../pages/Products";
 import Cart from "../pages/Cart";
 import Favorite from "../pages/Favorite";
 import Product from "../pages/Product";
+import Demostration from "../pages/Demostration";
 
 
 const Routes = () => {
@@ -141,6 +142,10 @@ const Routes = () => {
           path: "/",
           element: <Welcome />,
         },
+        {
+          path: "/demostration",
+          element: <Demostration />,
+        }
       ]
     }
   ];
